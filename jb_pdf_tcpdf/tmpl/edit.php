@@ -9,7 +9,7 @@
 **/
 
 /**
-* @version          JB Pdf
+* @version          JB Pdf Tcpdf
 *
 *
 *

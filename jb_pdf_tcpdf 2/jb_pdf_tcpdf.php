@@ -17,7 +17,7 @@
 
 defined( '_JEXEC' ) or die;
 // Plugin
-class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
+class plgCCK_FieldJbPdfTcpdf extends JCckPluginField
 {
     protected static $type      =   'jb_pdf_tcpdf';
     protected static $path;

@@ -243,22 +243,22 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         // $storages and $config are TODO, but first I need to provide 'enable' optiion in field settings
         if ( $process['settings'] )
         {
-            $process['settings'] = self::_tcpdfSetDynamicValues($process, &$fields, &$storages, &$config = array() );
+            $process['settings'] = self::_tcpdfSetDynamicValues($process['settings'], $fields, $storages, $config = array() );
         }
 
-        if ( $data['header'] )
+        if ( $process['header'] )
         {
-            $process['header'] = self::_tcpdfSetDynamicValues($process, &$fields, &$storages, &$config = array() );
+            $process['header'] = self::_tcpdfSetDynamicValues($process['header'], $fields, $storages, $config = array() );
         }
 
-        if ( $data['body'] )
+        if ( $process['body'] )
         {
-            $process['body'] = self::_tcpdfSetDynamicValues($process, &$fields, &$storages, &$config = array() );
+            $process['body'] = self::_tcpdfSetDynamicValues($process['body'], $fields, $storages, $config = array() );
         }
 
-        if ( $data['footer'] )
+        if ( $process['footer'] )
         {
-            $process['footer'] = self::_tcpdfSetDynamicValues($process, &$fields, &$storages, &$config = array() );
+            $process['footer'] = self::_tcpdfSetDynamicValues($process['footer'], $fields, $storages, $config = array() );
         }
 
         // create pdf
@@ -316,7 +316,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     * @return = $data with updated values
     *
     */
-    protected static function _tcpdfSetDynamicValues( $body, &$fields, &$storages, &$config = array() )
+    protected static function _tcpdfSetDynamicValues( &$body, &$fields, &$storages, &$config = array() )
     {
 
         // $config2
@@ -441,7 +441,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         $body   =   str_replace( '[sitename]', $config2->get( 'sitename' ), $body );
         $body   =   str_replace( '[siteurl]', JUri::base(), $body );
 
-
+        return $body;
     }
 
 
@@ -458,7 +458,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     * @return: array(0=>array($string,1st match in string, 2nd match string)
     *
     */
-    protected static function _tcpdfGetMethodParams( $pdf, $data, $serialized = 0)
+    protected static function _tcpdfGetMethodParams( &$pdf, $data, $serialized = 0)
     {
 
         if ( $data )
@@ -512,7 +512,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     *
     */
 
-    protected static function _tcpdfSetMethodParams( $pdf, $matches = array(), $serialized = 0, $data )
+    protected static function _tcpdfSetMethodParams( &$pdf, $matches = array(), $serialized = 0, &$data )
     {
 
         if ( is_array($matches) )
@@ -531,7 +531,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                     $params = $matches[2][$key];
 
                     // if not serialized then pass to instance and call the funky method with the funky parameters
-                    self::_tcpdfSetPdfMethodParams(&$pdf,$method,$params);
+                    self::_tcpdfSetPdfMethodParams($pdf,$method,$params);
 
                 }
                 elseif ($serialized === 1)
@@ -646,7 +646,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     *
     **/
 
-    protected static function _tcpdfHelper( $data )
+    protected static function _tcpdfHelper( &$data )
     {
 
         //  require_once('tcpdf_include.php');
@@ -660,7 +660,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         {
 
             $array = self::_tcpdfGetMethodParams($pdf, $data['settings']);
-            $data['settings'] = self::_tcpdfSetMethodParams(&$pdf,$array);
+            $data['settings'] = self::_tcpdfSetMethodParams($pdf,$array);
 
         }
 
@@ -668,7 +668,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         {
 
             $array = self::_tcpdfGetMethodParams($pdf, $data['header']);
-            $data['header'] = self::_tcpdfSetMethodParams(&$pdf,$array);
+            $data['header'] = self::_tcpdfSetMethodParams($pdf,$array);
 
         }
 
@@ -676,7 +676,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         {
 
             $array = self::_tcpdfGetMethodParams($pdf, $data['body'], 1);
-            $data['body'] = self::_tcpdfSetMethodParams(&$pdf, $array, 1, $data['body']);
+            $data['body'] = self::_tcpdfSetMethodParams($pdf, $array, 1, $data['body']);
 
         }
 
@@ -684,7 +684,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         {
 
             $array = self::_tcpdfGetMethodParams($pdf, $data['footer']);
-            $data['footer'] = self::_tcpdfSetMethodParams(&$pdf,$array);
+            $data['footer'] = self::_tcpdfSetMethodParams($pdf,$array);
 
         }
 

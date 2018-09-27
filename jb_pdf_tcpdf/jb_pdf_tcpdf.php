@@ -239,6 +239,28 @@ class plgCCK_FieldJbPdfTcpdf extends JCckPluginField
             return;
         }
 
+        // str_replace Seblod stuff
+        // $storages and $config are TODO, but first I need to provide 'enable' optiion in field settings
+        if ( $process['settings'] )
+        {
+            $process['settings'] = self::_tcpdfSetDynamicValues($process, &$fields, &$storages, &$config = array() );
+        }
+
+        if ( $data['header'] )
+        {
+            $process['header'] = self::_tcpdfSetDynamicValues($process, &$fields, &$storages, &$config = array() );
+        }
+
+        if ( $data['body'] )
+        {
+            $process['body'] = self::_tcpdfSetDynamicValues($process, &$fields, &$storages, &$config = array() );
+        }
+
+        if ( $data['footer'] )
+        {
+            $process['footer'] = self::_tcpdfSetDynamicValues($process, &$fields, &$storages, &$config = array() );
+        }
+
         // create pdf
         self::_tcpdfHelper($process);
 
@@ -282,215 +304,142 @@ class plgCCK_FieldJbPdfTcpdf extends JCckPluginField
 
     /*
     *
+    * $body = Seblod's $process['setting'] etc
+    * $config = Seblod's $config
+    *
+    *
+    *
     * str_replace with correct values from Joomla and Seblod
     * $type = user, fields, config, uri
-    * $body = copied straight from seblod code, they used body, where as I would have probably gone with $data
+    * $body = copied straight from seblod code, they used body, where as I would have probably gone with $data or even $process
     * @example:
     * @return = $data with updated values
     *
     */
-    protected static function _tcpdfStrReplaceVariables( $type = '', $body)
+    protected static function _tcpdfSetDynamicValues( $body, &$fields, &$storages, &$config = array() )
     {
 
-        switch ($type)
+        // $config2
+        // Seblod use $config2 for Joomla Config stuff as opposed to Seblod $config stuff
+        $config2    =   JFactory::getConfig();
+
+        // J(translate)
+        if ( $body != '' && strpos( $body, 'J(' ) !== false )
         {
-            case 'user':
-                # code...
-                if ( $body != '' && strpos( $body, '$user->' ) !== false ) {
-                    $user           =   JCck::getUser();
-                    $matches        =   '';
-                    $search         =   '#\$user\->([a-zA-Z0-9_]*)#';
-                    preg_match_all( $search, $body, $matches );
-                    if ( count( $matches[1] ) ) {
-                        foreach ( $matches[1] as $k=>$v ) {
-                            $body   =   str_replace( $matches[0][$k], $user->$v, $body );
-                        }
-                    }
+            $matches    =   '';
+            $search     =   '#J\((.*)\)#U';
+            preg_match_all( $search, $body, $matches );
+            if ( count( $matches[1] ) )
+            {
+                foreach ( $matches[1] as $text )
+                {
+                    $body    =   str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $body );
                 }
+            }
+        }
 
-                break;
+        // $user
+        if ( $body != '' && strpos( $body, '$user->' ) !== false )
+        {
+            $user           =   JCck::getUser();
+            $matches        =   '';
+            $search         =   '#\$user\->([a-zA-Z0-9_]*)#';
+            preg_match_all( $search, $body, $matches );
+            if ( count( $matches[1] ) )
+            {
+                foreach ( $matches[1] as $k=>$v )
+                {
+                    $body   =   str_replace( $matches[0][$k], $user->$v, $body );
+                }
+            }
+        }
 
-            case 'fields':
-                break;
+        // [date(.*)]
+        if ( $body != '' && strpos( $body, '[date' ) !== false )
+        {
+            $matches    =   null;
+            preg_match_all( '#\[date(.*)\]#U', $body, $matches );
+            if ( count( $matches[1] ) )
+            {
+                foreach ( $matches[1] as $match )
+                {
+                    $date       =   date( $match );
+                    $body       =   str_replace( '[date'.$match.']', $date, $body );
+                }
+            }
+        }
 
-            case 'config':
-                break;
-
-            case 'uri':
-                break;
-
-            default:
-                # code...
-                break;
+        // $fields (to make so that any field data can be used, maybe with #fiedl_name@property# i.e. #art_title@id#)
+        // #fieldnames#
+        $matches    =   null;
+        preg_match_all( '#\#([a-zA-Z0-9_]*)\##U', $body, $matches );
+        if ( count( $matches[1] ) )
+        {
+            foreach ( $matches[1] as $match )
+            {
+                if ( trim( $match ) && isset( $fields[$match]->text ) && trim( $fields[$match]->text != '' ) )
+                {
+                    $body   =   str_replace( '#'.$match.'#', $fields[$match]->text, $body );
+                } else {
+                    $body   =   ( trim( $match ) && isset( $fields[$match]->value ) && trim( $fields[$match]->value ) ) ? str_replace( '#'.$match.'#', $fields[$match]->value, $body ) : str_replace( '#'.$match.'#', '', $body );
+                }
+            }
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            $subject    =   str_replace( '[id]', $config['id'], $subject );
-            $subject    =   str_replace( '[pk]', $config['pk'], $subject );
-            $subject    =   str_replace( '[sitename]', $config2->get( 'sitename' ), $subject );
-            $subject    =   str_replace( '[siteurl]', JUri::base(), $subject );
-
-            // J(translate) for subject
-            if ( $subject != '' && strpos( $subject, 'J(' ) !== false ) {
-                $matches    =   '';
-                $search     =   '#J\((.*)\)#U';
-                preg_match_all( $search, $subject, $matches );
-                if ( count( $matches[1] ) ) {
-                    foreach ( $matches[1] as $text ) {
-                        $subject    =   str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $subject );
-                    }
+        // {del fieldname}{/del}
+        if ( $body != '' && strpos( $body, '{del' ) !== false )
+        {
+            $dels   =   null;
+            $body = str_replace( "\n", "", $body );
+            preg_match_all( '#\{del ([^\{]*)\}([^\{]*)\{\/del\}#', $body, $dels );
+            for ( $i = 0, $n = count( $dels[1] ); $i <= $n; $i++ )
+            {
+                $match  =   str_replace( '#', '' ,$dels[1][$i] );
+                if ( isset( $fields[$match]->value ) && trim( $fields[$match]->value ) )
+                {
+                    $body   =   str_replace( $dels[0][$i], $dels[2][$i], $body );
+                } else {
+                    $body   =   str_replace( $dels[0][$i], '', $body );
                 }
             }
+        }
 
-            if ( isset( $config['registration_activation'] ) ) {
-                $body       =   str_replace( '[activation]', JUri::root().'index.php?option=com_users&task=registration.activate&token='.$config['registration_activation'], $body );
-                $body       =   str_replace( '[username]', $fields['username']->value, $body );
-                $subject    =   str_replace( '[username]', $fields['username']->value, $subject );
-            }
-            // {del fieldname}{/del}
-            if ( $body != '' && strpos( $body, '{del' ) !== false ) {
-                $dels   =   null;
-                $body = str_replace( "\n", "", $body );
-                preg_match_all( '#\{del ([^\{]*)\}([^\{]*)\{\/del\}#', $body, $dels );
-                for ( $i = 0, $n = count( $dels[1] ); $i <= $n; $i++ ) {
-                    $match  =   str_replace( '#', '' ,$dels[1][$i] );
-                    if ( isset( $fields[$match]->value ) && trim( $fields[$match]->value ) ){
-                        $body   =   str_replace( $dels[0][$i], $dels[2][$i], $body );
+
+        // $cck->getAttr('fieldname');
+        if ( $body != '' && strpos( $body, '$cck->get' ) !== false )
+        {
+            $matches    =   '';
+            $search     =   '#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_]*)\' ?\)(;)?#';
+            preg_match_all( $search, $body, $matches );
+            if ( count( $matches[1] ) )
+            {
+                for ( $i = 0, $n = count( $matches[1] ); $i <= $n; $i++ )
+                {
+                    $attr   =   strtolower( $matches[1][$i] );
+                    $match  =   $matches[2][$i];
+                    if ( isset( $fields[$match]->$attr ) && trim( $fields[$match]->$attr ) != '' )
+                    {
+                        $body   =   str_replace( $matches[0][$i], $fields[$match]->$attr, $body );
                     } else {
-                        $body   =   str_replace( $dels[0][$i], '', $body );
+                        $body   =   str_replace( $matches[0][$i], '', $body );
                     }
                 }
             }
-            // #fieldnames#
-            $matches    =   null;
-            preg_match_all( '#\#([a-zA-Z0-9_]*)\##U', $body, $matches );
-            if ( count( $matches[1] ) ) {
-                foreach ( $matches[1] as $match ) {
-                    if ( trim( $match ) && isset( $fields[$match]->text ) && trim( $fields[$match]->text != '' ) ) {
-                        $body   =   str_replace( '#'.$match.'#', $fields[$match]->text, $body );
-                    } else {
-                        $body   =   ( trim( $match ) && isset( $fields[$match]->value ) && trim( $fields[$match]->value ) ) ? str_replace( '#'.$match.'#', $fields[$match]->value, $body ) : str_replace( '#'.$match.'#', '', $body );
-                    }
-                }
-            }
-            $matches    =   null;
-            preg_match_all( '#\#([a-zA-Z0-9_]*)\##U', $subject, $matches );
-            if ( count( $matches[1] ) ) {
-                foreach ( $matches[1] as $match ) {
-                    if ( trim( $match ) && isset( $fields[$match]->text ) && trim( $fields[$match]->text ) != '' ) {
-                        $subject    =   str_replace( '#'.$match.'#', $fields[$match]->text, $subject );
-                    } else {
-                        $subject    =   ( trim( $match ) && isset( $fields[$match]->value ) && trim( $fields[$match]->value ) != '' ) ? str_replace( '#'.$match.'#', $fields[$match]->value, $subject ) : str_replace( '#'.$match.'#', '', $subject );
-                    }
-                }
-            }
+        }
 
-            // $cck->getAttr('fieldname');
-            if ( $body != '' && strpos( $body, '$cck->get' ) !== false ) {
-                $matches    =   '';
-                $search     =   '#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_]*)\' ?\)(;)?#';
-                preg_match_all( $search, $body, $matches );
-                if ( count( $matches[1] ) ) {
-                    for ( $i = 0, $n = count( $matches[1] ); $i <= $n; $i++ ) {
-                        $attr   =   strtolower( $matches[1][$i] );
-                        $match  =   $matches[2][$i];
-                        if ( isset( $fields[$match]->$attr ) && trim( $fields[$match]->$attr ) != '' ){
-                            $body   =   str_replace( $matches[0][$i], $fields[$match]->$attr, $body );
-                        } else {
-                            $body   =   str_replace( $matches[0][$i], '', $body );
-                        }
-                    }
-                }
-            }
-
-            // J(translate)
-            if ( $body != '' && strpos( $body, 'J(' ) !== false ) {
-                $matches    =   '';
-                $search     =   '#J\((.*)\)#U';
-                preg_match_all( $search, $body, $matches );
-                if ( count( $matches[1] ) ) {
-                    foreach ( $matches[1] as $text ) {
-                        $body   =   str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $body );
-                    }
-                }
-            }
-
-            $body       =   str_replace( '[id]', $config['id'], $body );
-            $body       =   str_replace( '[pk]', $config['pk'], $body );
-            $body       =   str_replace( '[sitename]', $config2->get( 'sitename' ), $body );
-            $body       =   str_replace( '[siteurl]', JUri::base(), $body );
-            if ( $body != '' && strpos( $body, '$user->' ) !== false ) {
-                $user           =   JCck::getUser();
-                $matches        =   '';
-                $search         =   '#\$user\->([a-zA-Z0-9_]*)#';
-                preg_match_all( $search, $body, $matches );
-                if ( count( $matches[1] ) ) {
-                    foreach ( $matches[1] as $k=>$v ) {
-                        $body   =   str_replace( $matches[0][$k], $user->$v, $body );
-                    }
-                }
-            }
-            // [date(.*)]
-            if ( $body != '' && strpos( $body, '[date' ) !== false ) {
-                $matches    =   null;
-                preg_match_all( '#\[date(.*)\]#U', $body, $matches );
-                if ( count( $matches[1] ) ) {
-                    foreach ( $matches[1] as $match ) {
-                        $date       =   date( $match );
-                        $body       =   str_replace( '[date'.$match.']', $date, $body );
-                    }
-                }
-            }
-            // [fields]
-            if ( strpos( $body, '[fields]' ) !== false ) {
-                $bodyF  =   null;
-                if ( count( $fields ) ) {
-                    foreach ( $fields as $field ) {
-                        $fieldName  =   $field->name;
-                        if ( ! ( $field->type == 'password' && $field->value == 'XXXX' ) && isset( $field->value ) && trim( $field->value ) != '' && ( $field->variation != 'hidden' ) ) {
-                            $valF   =   ( isset( $field->text ) && trim( $field->text ) != '' ) ? trim( $field->text ) : trim( $field->value );
-                            $bodyF  .=  '- '.$field->label.' : '.$valF.'<br /><br />';
-                        }
-                    }
-                }
-                $body   =   ( strpos( $body, '[fields]' ) !== false ) ? str_replace( '[fields]', $bodyF, $body ) : $body.substr( $bodyF, 0, -12 );
-            }
+        // $config
+        // TODO
+        // Haven't got a scoobey-doo, should I even do it? If so, really need an option to enable it
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        // [id][pk][sitename][siteurl]
+        $body   =   str_replace( '[id]', $config['id'], $body );
+        $body   =   str_replace( '[pk]', $config['pk'], $body );
+        $body   =   str_replace( '[sitename]', $config2->get( 'sitename' ), $body );
+        $body   =   str_replace( '[siteurl]', JUri::base(), $body );
 
 
     }
@@ -691,9 +640,6 @@ class plgCCK_FieldJbPdfTcpdf extends JCckPluginField
     }
 
 
-
-
-
     /*
     *
     * $data = Seblod's $process
@@ -709,48 +655,9 @@ class plgCCK_FieldJbPdfTcpdf extends JCckPluginField
         // initiate
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-        // str_replace Seblod stuff
-        if ( $data['settings'] )
-        {
-
-            $$data['settings'] = self::_tcpdfStrReplaceVariables('user', $data['settings']);
-            $$data['settings'] = self::_tcpdfStrReplaceVariables('fields', $data['settings']);
-            $$data['settings'] = self::_tcpdfStrReplaceVariables('config', $data['settings']);
-            $$data['settings'] = self::_tcpdfStrReplaceVariables('uri', $data['settings']);
-
-        }
-
-        if ( $data['header'] )
-        {
-
-            $array = self::_tcpdfGetMethodParams($pdf, $data['header']);
-            $data['header'] = self::_tcpdfSetMethodParams(&$pdf,$array);
-
-        }
-
-        if ( $data['body'] )
-        {
-
-            $array = self::_tcpdfGetMethodParams($pdf, $data['body'], 1);
-            $data['body'] = self::_tcpdfSetMethodParams(&$pdf, $array, 1, $data['body']);
-
-        }
-
-        if ( $data['footer'] )
-        {
-
-            $array = self::_tcpdfGetMethodParams($pdf, $data['footer']);
-            $data['footer'] = self::_tcpdfSetMethodParams(&$pdf,$array);
-
-        }
-
-
-
-
         // get method and params from <tcpdf> tag and apply as $pdf->method($params) or serialized
         if ( $data['settings'] )
         {
-
 
             $array = self::_tcpdfGetMethodParams($pdf, $data['settings']);
             $data['settings'] = self::_tcpdfSetMethodParams(&$pdf,$array);
@@ -786,3 +693,15 @@ class plgCCK_FieldJbPdfTcpdf extends JCckPluginField
 
     }
 } // END OF PLUGIN
+
+
+
+
+
+
+
+
+
+
+
+

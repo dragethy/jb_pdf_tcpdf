@@ -1,0 +1,1 @@
+zip -r -X jb_pdf_tcpdf-test.zip jb_pdf_tcpdf

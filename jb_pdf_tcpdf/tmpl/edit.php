@@ -50,8 +50,8 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
                       <option value="2">Edit</option>
                   </optgroup>
               </select>';
-        echo '<input type="text" id="json_options2_create_field" name="json[options2][create_field]" value="" class="inputbox text" placeholder="some_field_to_override" size="14" maxlength="255" />';
-        echo '<input type="text" id="json_options2_create_field_trigger" name="json[options2][create_field_trigger]" value="" class="inputbox text" placeholder="value to look for" size="14" maxlength="255" />';
+        echo '<input type="text" id="json_options2_create_field" name="json[options2][create_field]" value="" class="inputbox text" placeholder="some_field_to_override" size="50" maxlength="255" />';
+        echo '<input type="text" id="json_options2_create_field_trigger" name="json[options2][create_field_trigger]" value="" class="inputbox text" placeholder="value to look for" size="50" maxlength="255" />';
 
 
 
@@ -67,7 +67,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         */
 
         echo '<label>Name PDF</label>';
-        echo '<input type="text" id="json_options2_name" name="json[options2][name]" value="" class="inputbox text" placeholder="/some/folder/mypdf.pdf" size="14" maxlength="255" />';
+        echo '<input type="text" id="json_options2_name" name="json[options2][name]" value="" class="inputbox text" placeholder="/some/folder/mypdf.pdf" size="50" maxlength="255" />';
 
 
 
@@ -112,7 +112,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
         echo '<label>Location TCPDF</label>';
-        echo '<input type="text" id="json_options2_location_tcpdf" name="json[options2][location_tcpdf]" value="" class="inputbox text" placeholder="location of tcpdf.php" size="14" maxlength="255" />';
+        echo '<input type="text" id="json_options2_location_tcpdf" name="json[options2][location_tcpdf]" value="" class="inputbox text" placeholder="location of tcpdf.php" size="50" maxlength="255" />';
 
 
         /*

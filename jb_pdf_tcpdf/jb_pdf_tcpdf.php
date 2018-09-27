@@ -240,7 +240,7 @@ class plgCCK_FieldJbPdfTcpdf extends JCckPluginField
         }
 
         // create pdf
-        self::_tcpdf($process);
+        self::_tcpdfHelper($process);
 
     }
 
@@ -267,6 +267,7 @@ class plgCCK_FieldJbPdfTcpdf extends JCckPluginField
 
 
 
+
     // _split($strng, 'delimiter')
     protected static function _splitDelimiter( $string, $delimiter = ',' )
     {
@@ -279,119 +280,130 @@ class plgCCK_FieldJbPdfTcpdf extends JCckPluginField
 
 
 
-    // convert tags to useable data
-    // from Header, Footer, Settings
-    // @tip: Assign that data to instance i.e. instance->method(param)
-    // @tip: If Body, then this has different approach and refer to _tcpdfTagHelperHtml
-    protected static function _tcpdfTagHelper( $data, $delimiter )
+    /*
+    *
+    * get method and params from any tag
+    * serialize them if going back in to the html, default is 'no' (0).
+    *
+    * @tip: Body uses different approach
+    *
+    * @example:
+    * @return: array(0=>array($string,1st match in string, 2nd match string)
+    *
+    */
+    protected static function _tcpdfGetMethodParams( $pdf, $data, $serialized = 0)
     {
 
         if ( $data )
         {
+
             if ( $data != '' && strpos( $data, '<tcpdf' ) !== false )
             {
-                $data = self::_tcpdfTagToData( $data, $data['delimiter'] );
 
-                // pass params to instance
-                // $vaue is array array(class => '', method => 'someMethod', params => array(0,1,2...))
-                foreach ($data as $key => $value)
+                // make an array of the strings method and params
+                preg_match_all('/<tcpdf[\s]?method="(.*?)"[\s]?params="(.*?)"[\s]?\/>/', $data, $matches);
+
+            }
+
+            // get params as array, and serialized if needed
+            foreach ($matches[0] as $key => $value)
+            {
+
+                $matches['params'][$key] = self::_split($matches[2][$key]);
+
+                if ($serialized === 1)
                 {
 
-                    self::_tcpdfParamsBuilder(&$pdf,&$value['method'], &$value['params']);
-                }
-            }
+                    $matches['params'][$key] = $pdf->serializeTCPDFtagParameters($matches['params'][$key]);
 
-        }
-    }
-
-
-
-
-    // convert tags to useable data
-    // from Body
-    // @tip: Any params need to be a php array, not string
-    // @tip: If no params then can be left as is
-    // @tip: this is because it will be added in $pdf->writeHTML($html, true, 0, true, 0);
-    // @example: Leave as is: <tcpdf method="AddPage" />
-    // @example: Example of converted: $params = $pdf->serializeTCPDFtagParameters(array(0));
-    // @example: $html .= '<tcpdf method="SetDrawColor" params="'.$params.'" />';
-    // @tip: need to factor in multidimensional arrays
-    protected static function _tcpdfTagHelperHtml( $data, $delimiter )
-    {
-
-        if ( $data != '' && strpos( $data, '<tcpdf' ) !== false )
-        {
-            // TODO
-            // create array
-            $matches = array();
-
-            // Need to find each occurence of <tcpdf(.*?)/> in the html
-            preg_match_all('/<tcpdf method="(.*?)" params="(.*?)"/>/', $data, $matches);
-
-            // within that find /params="(.*?)"/
-            foreach ($matches as $key => $value)
-            {
-                // foreach result in array: [0] is whole string, [1] is first () match, [2] is 2nd () match etc
-                // I want the 2nd () match if there is one
-                if ($value[2]) {
-                    # code...
-                    $array  = self::_split($value[2]);
-                    // apply  $pdf->serializeTCPDFtagParameters($array);
-                    $hashed = $pdf->serializeTCPDFtagParameters($array);
-                    // create new <tcpdf... with hashed params
-                    $string = str_replace($value[2], $hashed, $value[0]);
-                    // place back in to string
-                    $data = str_replace($value[0], $string, $data);
                 }
 
             }
-        }
-
-        return $data;
-
-    }
 
 
-
-    // _tcpdfParamsBuilder
-    // <tcpdf class="" method="" params="">);
-    // becomes array[0]['method'] = someMethod
-    // becomes array[0]['params'] = array(param1,param2,...)
-    protected static function _tcpdfTagToData( $string, $delimiter )
-    {
-
-        $matches    =   '';
-
-        $array = self::_splitDelimiter($string, $delimiter);
-
-        foreach($array as $k => $v)
-        {
-
-            if (preg_match('/method="(.*?)"/', $v, $match) === 1)
-            {
-               $matches[$k]['method'] = $match[1];
-            }
-
-            if (preg_match('/params="(.*?)"/', $v, $match) === 1)
-            {
-                // split params in to array
-                $matches[$k]['params'] = self::_split($match[1]);
-            }
         }
 
         return $matches;
+
+    }
+
+
+
+    /*
+    *
+    * $pdf = instance
+    * $matches = matches array from _tcpdfGetMethodParams
+    * $serialized = boolean
+    * $data = $data['body'] etc required if serializing
+    *
+    * @tip: set method and params from $data array
+    * @tip: if serialized === 1 then it is going to be a string replace in html
+    * @tip: array() is data from _tcpdfGetMethodParams
+    *
+    * @tip: Some methods may not require params : <tcpdf method="AddPage" />
+    *
+    *
+    */
+
+    protected static function _tcpdfSetMethodParams( $pdf, $matches = array(), $serialized = 0, $data )
+    {
+
+        if ( is_array($matches) )
+        {
+
+            // set the method and params
+            foreach ($matches[0] as $key => $value)
+            {
+
+                if ($serialized === 0)
+                {
+                    // $pdf->method($params)
+                    // get the method
+                    $method = $matches[1][$key];
+
+                    $params = $matches[2][$key];
+
+                    // if not serialized then pass to instance and call the funky method with the funky parameters
+                    self::_tcpdfSetPdfMethodParams(&$pdf,$method,$params);
+
+                }
+                elseif ($serialized === 1)
+                {
+
+                    // search for original string in $data and replace with '<tcpdf method=".$method." params=".$params." />';
+                    // reconstruct string with serialized params
+                    $search = $matches[0][$key];
+                    $replace = '<tcpdf method="'.$matches[1][$key].'" params="'.$matches['params'][$key].'" />';
+                    $subject = $data;
+
+                    $data = str_replace($search, $replace, $subject);
+
+                    $pdf->writeHTML($data, true, 0, true, 0);
+
+                }
+
+
+            }
+
+        }
+
+        return $data;
     }
 
 
 
 
-    // _tcpdfParamsBuilder
-    protected static function _tcpdfParamsBuilder( &$pdf,&$method, &$param )
+    // _tcpdfCallMethod
+    protected static function _tcpdfSetPdfMethodParams( &$pdf,&$method, &$params = '' )
     {
+
 
         // Parameters 10 max (should be enough, are there any methods that can take more?)
         switch (count($param))
         {
+            case 0:
+                $pdf->$method();
+                break;
             case 1:
                 $pdf->$method($param[0]);
                 break;
@@ -461,8 +473,16 @@ class plgCCK_FieldJbPdfTcpdf extends JCckPluginField
     }
 
 
-    // _tcpdf
-    protected static function _tcpdf( $data )
+
+
+
+    /*
+    *
+    * $data = Seblod's $process
+    *
+    **/
+
+    protected static function _tcpdfHelper( $data )
     {
 
         //  require_once('tcpdf_include.php');
@@ -471,27 +491,36 @@ class plgCCK_FieldJbPdfTcpdf extends JCckPluginField
         // initiate
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-        // convert and apply tags $pdf->method($params)
-        if ( $data['header'] )
-        {
-            self::_tcpdfTagHelper($data['header'],$data['delimiter']);
-
-        }
-        if ( $data['body'] )
-        {
-            // TODO
-            $data['body'] = self::_tcpdfTagHelperHtml($data['body'],$data['delimiter']);
-            $pdf->writeHTML($data['body'], true, 0, true, 0);
-
-        }
-        if ( $data['footer'] )
-        {
-            self::_tcpdfTagHelper($data['footer'],$data['delimiter']);
-
-        }
+        // get method and params from <tcpdf> tag and apply as $pdf->method($params) or serialized
         if ( $data['settings'] )
         {
-            self::_tcpdfTagHelper($data['settings'],$data['delimiter']);
+
+            $array = self::_tcpdfGetMethodParams($pdf, $data['settings']);
+            $data['settings'] = self::_tcpdfSetMethodParams(&$pdf,$array);
+
+        }
+
+        if ( $data['header'] )
+        {
+
+            $array = self::_tcpdfGetMethodParams($pdf, $data['header']);
+            $data['header'] = self::_tcpdfSetMethodParams(&$pdf,$array);
+
+        }
+
+        if ( $data['body'] )
+        {
+
+            $array = self::_tcpdfGetMethodParams($pdf, $data['body'], 1);
+            $data['body'] = self::_tcpdfSetMethodParams(&$pdf, $array, 1, $data['body']);
+
+        }
+
+        if ( $data['footer'] )
+        {
+
+            $array = self::_tcpdfGetMethodParams($pdf, $data['footer']);
+            $data['footer'] = self::_tcpdfSetMethodParams(&$pdf,$array);
 
         }
 

@@ -40,6 +40,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         * @example: you could then have another pdf plugin with create_field_trigger set as "portrait".
         *
         */
+
         echo '<label>Create PDF</label>';
         echo '<select id="json_options2_create_select" name="json[options2][create_select]" class="inputbox select has-value">
                   <option value="0" selected="selected">Never</option>
@@ -52,16 +53,22 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         echo '<input type="text" id="json_options2_create_field" name="json[options2][create_field]" value="" class="inputbox text" placeholder="some_field_to_override" size="14" maxlength="255">';
         echo '<input type="text" id="json_options2_create_field_trigger" name="json[options2][create_field_trigger]" value="" class="inputbox text" placeholder="value to look for" size="14" maxlength="255">';
 
+
+
+
         /*
         *
         * name
+        *
         * @options: Text [$user,$uri,$fields,#field_name#]
         * @tip:
-        * @example: "some/folder/somepdf.php"
+        * @example: "some/folder/$user->id/somepdf.php"
         *
         */
+
         echo '<label>Name PDF</label>';
         echo '<input type="text" id="json_options2_name" name="json[options2][name]" value="" class="inputbox text" placeholder="/some/folder/mypdf.pdf" size="14" maxlength="255">';
+
 
 
 
@@ -70,6 +77,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         * destination
         * @options: I,D,F,S,FI,FD,E
+        *
         * @tip: I: send the file inline to the browser (default). The plug-in is used if available. The name given by name is used when one selects the "Save as" option on the link generating the PDF.
         * @tip: D: send to the browser and force a file download with the name given by name.
         * @tip: F: save to a local server file with the name given by name.
@@ -80,6 +88,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         * @example: "F"
         *
         */
+
         echo '<label>Destination</label>';
         echo '<select id="json_options2_destination" name="json[options2][destination]" class="inputbox select has-value">
                   <option value="I" selected="selected">I</option>
@@ -130,7 +139,27 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         //           <option value="1"></option>
         //       </select>';
 
+
+
+
+
         /*
+        *
+        * delimiter
+        *
+        * @options: $string
+        * @example: ,
+        * @tip: what separates the tags in the settings i.e. ',\n,||' etc
+        *
+        */
+        echo '<label>TAG Delimiter</label>';
+        echo '<textarea id="json_options2_delimiter" name="json[options2][delimiter]" value="" class="inputbox text" placeholder="," col="50" rows="10">';
+
+
+
+
+        /*
+        *
         * settings
         *
         * @options: Add your method name and value using a html style tag
@@ -138,34 +167,33 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         * @tip: add any method, and reference the class if not default value
         * @tip: add as many as you like, these will be initiated before the rendering of the pdf
         * @tip: any method can be added in to the document, these will be applied as they appear, good for when requiring a specific page break
+        *
         */
+
         echo '<label>TCPDF Settings</label>';
         echo '<textarea id="json_options2_settings" name="json[options2][settings]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf method=&ldquo;addPageBreak&rdquo; params=&ldquo;true,10&rdquo; &frasl;&rsaquo;" col="50" rows="10">';
 
+
+
         /*
-        * delimiter
         *
-        * @options: $string
-        * @example: <tcpdf method="addPageBreak" value="true,10" class="">
-        * @tip: what separates the tags i.e. ',\n,||' etc
-        */
-        echo '<label>TAG Delimiter</label>';
-        echo '<textarea id="json_options2_delimiter" name="json[options2][delimiter]" value="" class="inputbox text" placeholder="," col="50" rows="10">';
-
-
-        /*
         * Header
         *
         * @tip: same functionality as Seblod's Email Message field
+        * @tip: Accepts [$user,$uri,$fields,#field_name#]
+        *
         */
         echo '<label>Header</label>';
         echo '<textarea id="json_options2_header" name="json[options2][header]" value="" class="inputbox text" col="50" rows="10">';
 
 
         /*
+        *
         * Body
         *
         * @tip: same functionality as Seblod's Email Message field
+        * @tip: Accepts [$user,$uri,$fields,#field_name#]
+        *
         */
         echo '<label>Body</label>';
         echo '<textarea id="json_options2_body" name="json[options2][body]" value="" class="inputbox text" col="50" rows="10">';
@@ -173,9 +201,12 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
 
 
         /*
+        *
         * Footer
         *
         * @tip: same functionality as Seblod's Email Message field
+        * @tip: Accepts [$user,$uri,$fields,#field_name#]
+        *
         */
         echo '<label>Footer</label>';
         echo '<textarea id="json_options2_footer" name="json[options2][footer]" value="" class="inputbox text" col="50" rows="10">';

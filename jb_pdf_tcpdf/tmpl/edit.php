@@ -50,7 +50,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
                       <option value="2">Edit</option>
                   </optgroup>
               </select>';
-        echo '<input type="text" id="json_options2_create_field" name="json[options2][create_field]" value="" class="inputbox text" placeholder="override_never_with_some_field" size="50" maxlength="255" />';
+        echo '<input type="text" id="json_options2_create_field" name="json[options2][create_field]" value="" class="inputbox text" placeholder="some_field_to_override_never" size="50" maxlength="255" />';
         echo '<input type="text" id="json_options2_create_field_trigger" name="json[options2][create_field_trigger]" value="" class="inputbox text" placeholder="If field, what value triggers this plugin" size="50" maxlength="255" />';
 
 

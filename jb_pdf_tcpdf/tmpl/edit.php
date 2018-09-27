@@ -50,8 +50,8 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
                       <option value="2">Edit</option>
                   </optgroup>
               </select>';
-        echo '<input type="text" id="json_options2_create_field" name="json[options2][create_field]" value="" class="inputbox text" placeholder="some_field_to_override" size="50" maxlength="255" />';
-        echo '<input type="text" id="json_options2_create_field_trigger" name="json[options2][create_field_trigger]" value="" class="inputbox text" placeholder="value to look for" size="50" maxlength="255" />';
+        echo '<input type="text" id="json_options2_create_field" name="json[options2][create_field]" value="" class="inputbox text" placeholder="override_never_with_some_field" size="50" maxlength="255" />';
+        echo '<input type="text" id="json_options2_create_field_trigger" name="json[options2][create_field_trigger]" value="" class="inputbox text" placeholder="If field, what value triggers this plugin" size="50" maxlength="255" />';
 
 
 
@@ -67,7 +67,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         */
 
         echo '<label>Name PDF</label>';
-        echo '<input type="text" id="json_options2_name" name="json[options2][name]" value="" class="inputbox text" placeholder="/some/folder/mypdf.pdf" size="50" maxlength="255" />';
+        echo '<input type="text" id="json_options2_name" name="json[options2][name]" value="" class="inputbox text" placeholder="/some/folder/$user-&rsaquo;id/mypdf.pdf" size="50" maxlength="255" />';
 
 
 
@@ -112,32 +112,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
         echo '<label>Location TCPDF</label>';
-        echo '<input type="text" id="json_options2_location_tcpdf" name="json[options2][location_tcpdf]" value="" class="inputbox text" placeholder="location of tcpdf.php" size="50" maxlength="255" />';
-
-
-        /*
-        * TODO
-        * location_override_select
-        * location_override_format
-        *
-        * Looking to use Seblod's SEF alias creation stuff i.e. append with -1, -2, -n, whatever is next in sequence
-        * @options: Yes,No
-        * @tip: If PDF with that name exists in that location, what do you want to do?
-        * @tip: If yes, replace existing
-        * @tip: If No, save with alteration as selected in location_override_format
-        *
-        */
-
-        // echo '<select id="json_options2_location_override_select" name="json[options2][location_override_select]" class="inputbox select has-value">
-        //           <option value="0" selected="selected">JNo</option>
-        //           <option value="1">JYes</option>
-        //       </select>';
-
-
-        // echo '<select id="json_options2_location_override_format" name="json[options2][location_override_format]" class="inputbox select has-value">
-        //           <option value="0" selected="selected"></option>
-        //           <option value="1"></option>
-        //       </select>';
+        echo '<input type="text" id="json_options2_location_tcpdf" name="json[options2][location_tcpdf]" value="" class="inputbox text" placeholder="location/of/tcpdf.php" size="50" maxlength="255" />';
 
 
 
@@ -170,7 +145,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         */
 
         echo '<label>TCPDF Settings</label>';
-        echo '<textarea id="json_options2_settings" name="json[options2][settings]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf method=&ldquo;addPageBreak&rdquo; params=&ldquo;true,10&rdquo; &frasl;&rsaquo;" col="50" rows="10" />';
+        echo '<textarea id="json_options2_settings" name="json[options2][settings]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf method=&ldquo;addPageBreak&rdquo; params=&ldquo;true,10&rdquo; &frasl;&rsaquo;" col="100" rows="10" ></textarea>';
 
 
 
@@ -181,9 +156,12 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         * @tip: same functionality as Seblod's Email Message field
         * @tip: Accepts [$user,$uri,$fields,#field_name#]
         *
+        * @example: <tcpdf  method="SetHeaderData" params="PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING" />
+        * @example: output as $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING);
+        *
         */
         echo '<label>Header</label>';
-        echo '<textarea id="json_options2_header" name="json[options2][header]" value="" class="inputbox text" col="50" rows="10" />';
+        echo '<textarea id="json_options2_header" name="json[options2][header]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf  method=&ldquo;SetHeaderData&rdquo; params=&ldquo;PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.\' 006\', PDF_HEADER_STRING&rdquo; &frasl;&rsaquo;" col="100" rows="10" ></textarea>';
 
 
         /*
@@ -195,7 +173,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
         echo '<label>Body</label>';
-        echo '<textarea id="json_options2_body" name="json[options2][body]" value="" class="inputbox text" col="50" rows="10" />';
+        echo '<textarea id="json_options2_body" name="json[options2][body]" value="" placeholder="#some_field# &lsaquo;tcpdf  method=&ldquo;SetHeaderData&rdquo; params=&ldquo;PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.\' 006\', PDF_HEADER_STRING&rdquo; &frasl;&rsaquo;" class="inputbox text" col="100" rows="10"></textarea>';
 
 
 
@@ -208,7 +186,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
         echo '<label>Footer</label>';
-        echo '<textarea id="json_options2_footer" name="json[options2][footer]" value="" class="inputbox text" col="50" rows="10" />';
+        echo '<textarea id="json_options2_footer" name="json[options2][footer]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf  method=&ldquo;SetFooterMargin&rdquo; params=&ldquo;PDF_MARGIN_FOOTER&rdquo; &frasl;&rsaquo;" col="100" rows="10" ></textarea>';
 
 
 

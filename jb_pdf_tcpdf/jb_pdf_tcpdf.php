@@ -134,39 +134,49 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
         $options2   =   JCckDev::fromJSON( $field->options2 );
 
-        $isNew      =   ( $config['pk'] ) ? 0 : 1;
 
-        // Determine whether we create PDF or not?
+        // based on email 'send'
+        // first, is it Never=0||Add=1||Edit=2||Always=3
         $create_select  =   ( isset( $options2['create_select'] ) && $field->state != 'disabled' ) ? $options2['create_select'] : 0;
-        $create_field = ( isset( $options2['create_field'] ) && $field->state != 'disabled' ) ? $options2['create_field'] : '';
-        $create_field_trigger   =   ( isset( $options2['create_field_trigger'] ) && $field->state != 'disabled' ) ? $options2['create_field_trigger'] : '';
-        $name   =   ( isset( $options2['name'] ) && $field->state != 'disabled' ) ? $options2['name'] : '';
-        $destination   =   ( isset( $options2['destination'] ) && $field->state != 'disabled' ) ? $options2['destination'] : JPATH_SITE.'/'.'images/mypdf.pdf';
-        $location_tcpdf   =   ( isset( $options2['location_tcpdf'] ) ) ? $options2['location_tcpdf'] : JPATH_SITE.'/'.'libraries'.'/'.'tcpdf'.'/'.'tcpdf.php';
+        // is 'never' overriden by a field?
+        $create_field = ( isset( $options2['create_field'] ) && strlen( $options2['create_field'] ) > 0 ) ? $options2['create_field'] : 0;
+        // what value from that field is the trigger, default is 1
+        $create_field_trigger   =   ( isset( $options2['create_field_trigger'] ) && strlen( $options2['create_field_trigger'] ) > 0 ) ? $options2['create_field_trigger'] : 1;
+        // name of location i.e. some/folder/mypdf.pdf
+        $name   =   ( isset( $options2['name'] ) && $field->state != 'disabled' ) ? $options2['name'] : JPATH_SITE.'/'.'images/mypdf.pdf';
+        //  where to send i.e to browser etc https://www.rubydoc.info/gems/rfpdf/1.17.1/TCPDF:Output
+        $destination   =   ( isset( $options2['destination'] ) && $field->state != 'disabled' ) ? $options2['destination'] : 'F';
+        // where the tcpdf stuff is
+        $location_tcpdf   =   ( isset( $options2['location_tcpdf'] ) ) ? $options2['location_tcpdf'] : JPATH_SITE.'/'.'libraries'.'/'.'TCPDF-master'.'/'.'tcpdf.php';
+        // split strings by this value, might be redundant now
         $delimiter   =   ( isset( $options2['delimiter'] ) ) ? $options2['delimiter'] : '';
         $settings   =   ( isset( $options2['settings'] ) ) ? $options2['settings'] : '';
         $header =   ( isset( $options2['header'] ) ) ? $options2['header'] : '';
         $body   =   ( isset( $options2['body'] ) ) ? $options2['body'] : '';
         $footer =   ( isset( $options2['footer'] ) ) ? $options2['footer'] : '';
 
+
         $valid      =   0;
 
         // Prepare
-        switch ( $create ) {
+        switch ( $create_select ) {
             case 0:
-            $create_field_trigger = ($create_field_trigger == '') ? 1 : $create_field_trigger;
-              $valid = ($fields[$create_field]->value == $create_field_trigger) ? 1 : 0;
+                // if fields value and trigger value are the same then go for it else do not
+                $valid = ($fields[$create_field]->value == $create_field_trigger) ? 1 : 0;
                 break;
 
             case 1:
+                // if add...
                 $valid  =   ($isNew === 1) ? 1 : 0;
                 break;
 
             case 2:
+                // if edit
                 $valid  =   ($isNew === 0) ? 1 : 0;
                 break;
 
             case 3:
+                // er... always...
                 $valid  =   1;
                 break;
 
@@ -227,20 +237,28 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     // onCCK_FieldAfterStore
     public static function onCCK_FieldAfterStore( $process, &$fields, &$storages, &$config = array() )
     {
-        $isNew      =   $process['isNew'];
         $valid      =   $process['valid'];
 
-        if ( $valid )
-        {
-
-        }
         if ( !$valid )
         {
             return;
         }
 
+        $isNew      =   $process['isNew'];
+
         // str_replace Seblod stuff
         // $storages and $config are TODO, but first I need to provide 'enable' optiion in field settings
+
+        if ( $process['name'] )
+        {
+            $process['name'] = self::_tcpdfSetDynamicValues($process['name'], $fields, $storages, $config = array() );
+        }
+
+        if ( $process['destination'] )
+        {
+            $process['destination'] = self::_tcpdfSetDynamicValues($process['destination'], $fields, $storages, $config = array() );
+        }
+
         if ( $process['settings'] )
         {
             $process['settings'] = self::_tcpdfSetDynamicValues($process['settings'], $fields, $storages, $config = array() );
@@ -430,7 +448,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
         // $config
         // TODO
-        // Haven't got a scoobey-doo, should I even do it? If so, really need an option to enable it
+        // Haven't got a scoobey-doo, should I even do it? If so, I really need an option to enable it
 
 
 

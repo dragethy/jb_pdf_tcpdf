@@ -58,16 +58,16 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
 
         /*
         *
-        * name
+        * location
         *
         * @options: Text [$user,$uri,$fields,#field_name#]
-        * @tip:
+        * @tip: tcpdf have this as 'name' but that competes with a Seblod useage
         * @example: "some/folder/$user->id/somepdf.php"
         *
         */
 
-        echo '<label>Name PDF</label>';
-        echo '<input type="text" id="json_options2_name" name="json[options2][name]" value="" class="inputbox text" placeholder="/some/folder/$user-&rsaquo;id/mypdf.pdf" size="50" maxlength="255" />';
+        echo '<label>Location for PDF</label>';
+        echo '<input type="text" id="json_options2_location" name="json[options2][location]" value="" class="inputbox text" placeholder="/some/location/$user-&rsaquo;id/mypdf.pdf" size="50" maxlength="255" />';
 
 
 
@@ -114,21 +114,6 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         echo '<label>Location TCPDF</label>';
         echo '<input type="text" id="json_options2_location_tcpdf" name="json[options2][location_tcpdf]" value="" class="inputbox text" placeholder="location/of/tcpdf.php" size="50" maxlength="255" />';
 
-
-
-
-
-        /*
-        *
-        * delimiter
-        *
-        * @options: $string
-        * @example: ,
-        * @tip: what separates the tags in the settings i.e. ',\n,||' etc
-        *
-        */
-        echo '<label>TAG Delimiter</label>';
-        echo '<input type="text" id="json_options2_delimiter" name="json[options2][delimiter]" value="" class="inputbox text" placeholder=", or || etc" size="14" maxlength="255" />';
 
 
 

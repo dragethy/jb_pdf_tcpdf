@@ -31,6 +31,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             return;
         }
         parent::g_onCCK_FieldConstruct( $data );
+
     }
 
   // -------- -------- -------- -------- -------- -------- -------- -------- // Prepare
@@ -121,10 +122,10 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     // onCCK_FieldPrepareStore
     public function onCCK_FieldPrepareStore( &$field, $value = '', &$config = array(), $inherit = array(), $return = false )
     {
+
         if ( self::$type != $field->type ) {
             return;
         }
-
         // Init
         if ( count( $inherit ) ) {
             $name   =   ( isset( $inherit['name'] ) && $inherit['name'] != '' ) ? $inherit['name'] : $field->name;
@@ -142,19 +143,19 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         $create_field = ( isset( $options2['create_field'] ) && strlen( $options2['create_field'] ) > 0 ) ? $options2['create_field'] : 0;
         // what value from that field is the trigger, default is 1
         $create_field_trigger   =   ( isset( $options2['create_field_trigger'] ) && strlen( $options2['create_field_trigger'] ) > 0 ) ? $options2['create_field_trigger'] : 1;
-        // name of location i.e. some/folder/mypdf.pdf
-        $name   =   ( isset( $options2['name'] ) && $field->state != 'disabled' ) ? $options2['name'] : JPATH_SITE.'/'.'images/mypdf.pdf';
+        // location i.e. some/folder/mypdf.pdf
+        $location   =   ( isset( $options2['location'] ) && strlen( $options2['location'] ) > 0 ) ? $options2['location'] : JPATH_SITE.'/'.'images/mypdf.pdf';
         //  where to send i.e to browser etc https://www.rubydoc.info/gems/rfpdf/1.17.1/TCPDF:Output
-        $destination   =   ( isset( $options2['destination'] ) && $field->state != 'disabled' ) ? $options2['destination'] : 'F';
+        $destination   =   ( isset( $options2['destination'] ) && strlen( $options2['destination'] ) > 0 ) ? $options2['destination'] : 'F';
         // where the tcpdf stuff is
-        $location_tcpdf   =   ( isset( $options2['location_tcpdf'] ) ) ? $options2['location_tcpdf'] : JPATH_SITE.'/'.'libraries'.'/'.'TCPDF-master'.'/'.'tcpdf.php';
+        $location_tcpdf   =   ( isset( $options2['location_tcpdf'] ) && strlen( $options2['location_tcpdf'] ) > 0 ) ? $options2['location_tcpdf'] : JPATH_SITE.'/'.'libraries'.'/'.'TCPDF-master'.'/'.'tcpdf.php';
         // split strings by this value, might be redundant now
-        $delimiter   =   ( isset( $options2['delimiter'] ) ) ? $options2['delimiter'] : '';
         $settings   =   ( isset( $options2['settings'] ) ) ? $options2['settings'] : '';
         $header =   ( isset( $options2['header'] ) ) ? $options2['header'] : '';
         $body   =   ( isset( $options2['body'] ) ) ? $options2['body'] : '';
         $footer =   ( isset( $options2['footer'] ) ) ? $options2['footer'] : '';
 
+        $isNew      =   ( $config['pk'] ) ? 0 : 1;
 
         $valid      =   0;
 
@@ -181,7 +182,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 break;
 
             default:
-              $valid = 0;
+                $valid = 0;
                 break;
         }
 
@@ -196,10 +197,9 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 'create_select'=>$create_select,
                 'create_field'=>$create_field,
                 'create_field_trigger'=>$create_field_trigger,
-                'name'=>$name,
+                'location'=>$location,
                 'destination'=>$destination,
                 'location_tcpdf'=>$location_tcpdf,
-                'delimiter'=>$delimiter,
                 'settings'=>$settings,
                 'header'=>$header,
                 'body'=>$body,
@@ -207,7 +207,6 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 'valid'=>$valid
             ));
         }
-
         // Set or Return
         if ( $return === true ) {
             return $value;
@@ -237,6 +236,8 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     // onCCK_FieldAfterStore
     public static function onCCK_FieldAfterStore( $process, &$fields, &$storages, &$config = array() )
     {
+
+
         $valid      =   $process['valid'];
 
         if ( !$valid )
@@ -249,34 +250,34 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         // str_replace Seblod stuff
         // $storages and $config are TODO, but first I need to provide 'enable' optiion in field settings
 
-        if ( $process['name'] )
+        if ( $process['location'] )
         {
-            $process['name'] = self::_tcpdfSetDynamicValues($process['name'], $fields, $storages, $config = array() );
+            $process['location'] = self::_tcpdfSetDynamicValues($process['location'], $fields, $storages, $config );
         }
 
         if ( $process['destination'] )
         {
-            $process['destination'] = self::_tcpdfSetDynamicValues($process['destination'], $fields, $storages, $config = array() );
+            $process['destination'] = self::_tcpdfSetDynamicValues($process['destination'], $fields, $storages, $config );
         }
 
         if ( $process['settings'] )
         {
-            $process['settings'] = self::_tcpdfSetDynamicValues($process['settings'], $fields, $storages, $config = array() );
+            $process['settings'] = self::_tcpdfSetDynamicValues($process['settings'], $fields, $storages, $config );
         }
 
         if ( $process['header'] )
         {
-            $process['header'] = self::_tcpdfSetDynamicValues($process['header'], $fields, $storages, $config = array() );
+            $process['header'] = self::_tcpdfSetDynamicValues($process['header'], $fields, $storages, $config );
         }
 
         if ( $process['body'] )
         {
-            $process['body'] = self::_tcpdfSetDynamicValues($process['body'], $fields, $storages, $config = array() );
+            $process['body'] = self::_tcpdfSetDynamicValues($process['body'], $fields, $storages, $config );
         }
 
         if ( $process['footer'] )
         {
-            $process['footer'] = self::_tcpdfSetDynamicValues($process['footer'], $fields, $storages, $config = array() );
+            $process['footer'] = self::_tcpdfSetDynamicValues($process['footer'], $fields, $storages, $config );
         }
 
         // create pdf
@@ -308,17 +309,6 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
 
 
-    // _split($strng, 'delimiter')
-    protected static function _splitDelimiter( $string, $delimiter = ',' )
-    {
-
-        $tab    =   explode( $delimiter, $string );
-
-        return $tab;
-    }
-
-
-
 
     /*
     *
@@ -341,6 +331,8 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         // Seblod use $config2 for Joomla Config stuff as opposed to Seblod $config stuff
         $config2    =   JFactory::getConfig();
 
+
+
         // J(translate)
         if ( $body != '' && strpos( $body, 'J(' ) !== false )
         {
@@ -355,6 +347,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 }
             }
         }
+
 
         // $user
         if ( $body != '' && strpos( $body, '$user->' ) !== false )
@@ -371,6 +364,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 }
             }
         }
+
 
         // [date(.*)]
         if ( $body != '' && strpos( $body, '[date' ) !== false )
@@ -404,7 +398,6 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             }
         }
 
-
         // {del fieldname}{/del}
         if ( $body != '' && strpos( $body, '{del' ) !== false )
         {
@@ -422,7 +415,6 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 }
             }
         }
-
 
         // $cck->getAttr('fieldname');
         if ( $body != '' && strpos( $body, '$cck->get' ) !== false )
@@ -445,6 +437,8 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 }
             }
         }
+
+
 
         // $config
         // TODO
@@ -494,7 +488,21 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             foreach ($matches[0] as $key => $value)
             {
 
+                // if nested array
+                if ( $matches[2][$key] != '' && strpos( $matches[2][$key], 'array' ) !== false )
+                {
+                    // split in to an array up until 'array(',  then split that in to the array, then continue until come across 'array(' again etc
+                }
+
+                if ( $matches['params'][$key] != '' && strpos( $matches['params'][$key], ',' ) !== false )
+                    {
+
+                        $matches['params'][$key] = self::_split($matches['params'][$key]);
+                    }
+                }
+
                 $matches['params'][$key] = self::_split($matches[2][$key]);
+
 
                 if ($serialized === 1)
                 {
@@ -705,9 +713,11 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             $data['footer'] = self::_tcpdfSetMethodParams($pdf,$array);
 
         }
-
-        // create the title for pdf (used in 'save as' option on computer.)
-        $pdf->Output($data['name'], $data['destination']);
+$message = $data['location'].', ';
+$message .= $data['destination'];
+JFactory::getApplication()->enqueueMessage($message , 'Output');
+        // // create the title for pdf (used in 'save as' option on computer.)
+        $pdf->Output($data['location'], $data['destination']);
 
     }
 } // END OF PLUGIN

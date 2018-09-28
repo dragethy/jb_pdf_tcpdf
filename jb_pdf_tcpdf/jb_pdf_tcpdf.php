@@ -484,24 +484,89 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
             }
 
-            // get params as array, and serialized if needed
+            // $matches is now an array of array($str,$method,$params)
+
+            // get params as array,
+            // and serialized if needed
+            // but first we have to make sure we deal with nested arrays in the string or $params
             foreach ($matches[0] as $key => $value)
             {
 
-                // if nested array
-                if ( $matches[2][$key] != '' && strpos( $matches[2][$key], 'array' ) !== false )
+                if ( $matches[2][$key] != '' && strpos( $matches[2][$key], ',' ) !== false )
                 {
-                    // split in to an array up until 'array(',  then split that in to the array, then continue until come across 'array(' again etc
-                }
-
-                if ( $matches['params'][$key] != '' && strpos( $matches['params'][$key], ',' ) !== false )
+                    // if not nested array()
+                    if ( strpos( $matches[2][$key], 'array(' ) === false )
                     {
+                        $matches['params'][$key] = self::_split($matches[2][$key]);
+                    }
+                    else
+                    {
+                        // check if string starts with array(, if so do a regexp on it, to make array of values and assign to main array
+                        if ( strpos( $matches[2][$key], 'array(' ) !== false )
 
-                        $matches['params'][$key] = self::_split($matches['params'][$key]);
+                        // split in to an array up until 'array(',  then split that in to the array, then continue until come across 'array(' again etc
+
+                        # code...
+                    $matches['params'][$key] = self::_split($matches['params'][$key]);
                     }
                 }
 
-                $matches['params'][$key] = self::_split($matches[2][$key]);
+
+
+// <?php
+
+
+
+$string = "12,13,array(dog,cat,fish => 'shark'),1,2,3,array(a,b,c => d, e),5,5";
+// if string starts with array do the thing else split up to first ','
+
+$stringIterated = $string;
+
+
+
+$array =
+
+function loopCheckArrayOrNot ($stringIterated) {
+    if (strpos( $stringIterated, ',' ))
+    {
+
+        $matched = checkArrayOrNot($stringIterated);
+
+    }
+}
+
+
+
+function checkArrayOrNot ($string) {
+
+    if (preg_match("/^array/",$string))
+    {
+        // if matches as array, returns "array" as array()
+        preg_match("/array\((.*)\)[,]?/", $string, $match);
+        // return array as data
+        $data[0] = $match[1];
+        // split string after array and pass that as string to be submitted next
+        $data[1] = preg_split("/array\((.*)[,]/", $string);
+
+    } else {
+
+        $data = explode(",", $string, 2);
+    }
+    return $data;
+}
+
+
+
+
+var_dump($matched);
+
+
+
+    //preg_match("/^jhon..n$/",$name);
+// preg_match_all('/<tcpdf[\s]?method="(.*?)"[\s]?params="(.*?)"[\s]?\/>/', $data, $matches);
+
+                }
+
 
 
                 if ($serialized === 1)

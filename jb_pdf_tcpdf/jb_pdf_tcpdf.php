@@ -537,22 +537,81 @@ function loopCheckArrayOrNot ($stringIterated) {
 
 
 
-function checkArrayOrNot ($string) {
+function checkArrayOrNot ($string)
+{
 
-    if (preg_match("/^array/",$string))
+    $data = '';
+
+    // If $string starts with "array("...
+    // It will either be "1,2,array(1,2,3 => 4)" or "array(1,2,3 => 4),2,3,4"
+    if (preg_match("/^array(/",$string))
     {
-        // if matches as array, returns "array" as array()
-        preg_match("/array\((.*)\)[,]?/", $string, $match);
-        // return array as data
-        $data[0] = $match[1];
-        // split string after array and pass that as string to be submitted next
-        $data[1] = preg_split("/array\((.*)[,]/", $string);
+        // if preg_match, returns contents of as array()
+        // $match[1] = content of array // did use preg_split("/array\((.*)[,]/", $string); but instead added extra parenthesis to preg_match
+        // $match[2] = remainder of string to iterate through
+        preg_match("/array\((.*)\)[,]?(.*)/", $string, $match);
 
-    } else {
+        // convert $match[1] in an array()
+        $match[1] = explode(",", $match[1]);
 
-        $data = explode(",", $string, 2);
+        // assign to $data array results from $match...
+        // is $match[1][n] meant to be assoc array i.e. a => b
+        foreach ($match[1] as $key => $value)
+        {
+            // convert assoc
+            if (strpos( $string, '=>' ))
+            {
+
+                preg_match('/(.*)[\s]?=>[\s]?(.*)/', $string, $matchAssoc);
+                // reassign key and value as assoc
+                $key = $matchAssoc[1];
+
+                $value = $matchAssoc[2];
+
+            }
+
+            $data[$key] = $value;
+        }
+
+        // need the rest of the string to search through
+        $string = $match[2];
+
     }
-    return $data;
+    elseif (strpos( $string, ',' ))
+    {
+
+        // if does not start with array, split at first ","
+        $match = explode(",", $string, 2);
+
+        $data = $match[0];
+
+        // need the rest of the string to search through
+        $string = $match[1];
+
+    }
+    else
+    {
+        // nothing to do
+        $data = $string;
+    }
+
+    // assign $data to a kind of global array and start again with new string or return
+    $dataReturn[] = $data;
+
+    // Keep looping this function if ',' otherwise return the data
+    // there will be a ',' if 1,2 or array(1,2)...
+    if (strpos( $string, ',' ))
+    {
+        // call this method again using recommended way
+        call_user_func_array("checkArrayOrNot", array($string));
+    }
+    else
+    {
+        // all done
+        return $data;
+    }
+
+
 }
 
 

@@ -583,6 +583,85 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
 
 
+
+
+
+
+    <?php
+
+    /*
+    *
+    * get method and params from any tag
+    * serialize them if going back in to the html, default is 'no' (0).
+    *
+    * @tip: Body uses different approach
+    *
+    * @example:
+    * @return: array(0=>array($string,1st match in string, 2nd match string)
+    *
+    */
+    protected static function _tcpdfGetMethodParams( &$pdf, $data, $serialized = 0)
+    {
+
+        if ( $data )
+        {
+
+            if ( $data != '' && strpos( $data, '<tcpdf' ) !== false )
+            {
+
+                // make an array of the strings method and params
+                preg_match_all('/<tcpdf[\s]?method="(.*?)"[\s]?params="(.*?)"[\s]?\/>/', $data, $matches);
+
+            }
+
+            // $matches is now an array of array($str,$method,$params)
+
+            // get params as array,
+            // and serialized if needed
+            // but first we have to make sure we deal with nested arrays in the string or $params
+            foreach ($matches[0] as $key => $value)
+            {
+
+                if ( $matches[2][$key] != '' && strpos( $matches[2][$key], ',' ) !== false )
+                {
+                    // if not contain any array()
+                    if ( strpos( $matches[2][$key], 'array(' ) === false )
+                    {
+                        $matches['params'][$key] = self::_split($matches[2][$key]);
+                    }
+                    else
+                    {
+                        // check if string starts with array(, if so do a regexp on it, to make array of values and assign to main array
+                        if ( strpos( $matches[2][$key], 'array(' ) !== false )
+
+                        // split in to an array up until 'array(',  then split that in to the array, then continue until come across 'array(' again etc
+
+                        # code...
+                        $matches['params'][$key] = self::_split($matches['params'][$key]);
+                    }
+                }
+
+                if ($serialized === 1)
+                {
+
+                    $matches['params'][$key] = $pdf->serializeTCPDFtagParameters($matches['params'][$key]);
+
+                }
+
+            }
+
+
+        }
+
+        return $matches;
+
+    }
+
+
+
+
+
+
     /*
     *
     * $pdf = instance

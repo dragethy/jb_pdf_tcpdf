@@ -676,7 +676,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     *
     */
 
-    protected static function _tcpdfSetMethodParams( &$pdf, $matches = array(), $serialized = 0, &$data )
+    protected static function _tcpdfSetMethodParams( &$pdf, $matches = array(), $serialized = 0, &$data = array() )
     {
 
         if ( is_array($matches) )

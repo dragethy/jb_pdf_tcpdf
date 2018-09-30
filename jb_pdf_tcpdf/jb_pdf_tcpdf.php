@@ -477,8 +477,8 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     {
 
         $data = array();
-
-        for ($i=0; $i < 1; $i++)
+        $i = 0;
+        for ($i; $i < 1; $i++)
         {
 
             // call this method again using recommended way
@@ -489,7 +489,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             if (strpos( $matches[2], ',' ))
             {
 
-                $i = 0;
+                $i--;
                 $string = $matches[2];
 
             }
@@ -630,8 +630,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                     }
                     else
                     {
-                        // check if string starts with array(, if so do a regexp on it, to make array of values and assign to main array
-                        if ( strpos( $matches[2][$key], 'array(' ) !== false )
+
 
                         // split in to an array up until 'array(',  then split that in to the array, then continue until come across 'array(' again etc
 

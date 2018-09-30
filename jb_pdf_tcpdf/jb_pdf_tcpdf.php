@@ -587,7 +587,6 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
 
 
-    <?php
 
     /*
     *

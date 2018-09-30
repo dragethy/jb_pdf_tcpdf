@@ -13,9 +13,11 @@
 	<scriptfile>install/script.php</scriptfile>
 
 	<files>
+		<folder>install</folder>
+		<folder>install/fields</folder>
+		<folder>languages</folder>
 		<folder>assets</folder>
 		<folder>classes</folder>
-		<folder>install</folder>
 		<folder>tmpl</folder>
 
 		<filename plugin="jb_pdf_tcpdf">jb_pdf_tcpdf.php</filename>

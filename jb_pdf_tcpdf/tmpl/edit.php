@@ -120,20 +120,6 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
 
         /*
         *
-        * delimiter
-        *
-        * @options: $string
-        * @example: ,
-        * @tip: what separates the tags in the settings i.e. ',\n,||' etc
-        *
-        */
-        echo '<label>TAG Delimiter</label>';
-        echo '<input type="text" id="json_options2_delimiter" name="json[options2][delimiter]" value="" class="inputbox text" placeholder=", or || etc" size="14" maxlength="255" />';
-
-
-
-        /*
-        *
         * settings
         *
         * @options: Add your method name and value using a html style tag

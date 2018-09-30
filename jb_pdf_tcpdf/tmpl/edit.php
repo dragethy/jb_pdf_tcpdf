@@ -117,6 +117,10 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
 
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
         /*
         *
         * settings

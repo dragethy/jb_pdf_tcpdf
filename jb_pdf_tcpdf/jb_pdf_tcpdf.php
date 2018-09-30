@@ -459,190 +459,127 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
 
 
+
+
+
+
     /*
     *
-    * get method and params from any tag
-    * serialize them if going back in to the html, default is 'no' (0).
+    * $string = $params
     *
-    * @tip: Body uses different approach
+    * @tip: get string and convert to array
+    * @tip: there might be nested arrays
     *
-    * @example:
-    * @return: array(0=>array($string,1st match in string, 2nd match string)
+    * @return: $match[0]string,[1]1st (), [2]2nd ()
     *
     */
-    protected static function _tcpdfGetMethodParams( &$pdf, $data, $serialized = 0)
+    protected static function _tcpdfGetArrayFromStringHelper ($string)
     {
 
-        if ( $data )
+        $data = array();
+
+        for ($i=0; $i < 1; $i++)
         {
 
-            if ( $data != '' && strpos( $data, '<tcpdf' ) !== false )
+            // call this method again using recommended way
+            $matches = self::_tcpdfGetArrayFromString($string);
+
+            $data[] = $matches[1];
+
+            if (strpos( $matches[2], ',' ))
             {
 
-                // make an array of the strings method and params
-                preg_match_all('/<tcpdf[\s]?method="(.*?)"[\s]?params="(.*?)"[\s]?\/>/', $data, $matches);
+                $i = 0;
+                $string = $matches[2];
 
             }
-
-            // $matches is now an array of array($str,$method,$params)
-
-            // get params as array,
-            // and serialized if needed
-            // but first we have to make sure we deal with nested arrays in the string or $params
-            foreach ($matches[0] as $key => $value)
+            else
             {
+                $data[] = $matches[2];
 
-                if ( $matches[2][$key] != '' && strpos( $matches[2][$key], ',' ) !== false )
-                {
-                    // if not nested array()
-                    if ( strpos( $matches[2][$key], 'array(' ) === false )
-                    {
-                        $matches['params'][$key] = self::_split($matches[2][$key]);
-                    }
-                    else
-                    {
-                        // check if string starts with array(, if so do a regexp on it, to make array of values and assign to main array
-                        if ( strpos( $matches[2][$key], 'array(' ) !== false )
-
-                        // split in to an array up until 'array(',  then split that in to the array, then continue until come across 'array(' again etc
-
-                        # code...
-                    $matches['params'][$key] = self::_split($matches['params'][$key]);
-                    }
-                }
-
-
-
-// <?php
-
-
-
-$string = "12,13,array(dog,cat,fish => 'shark'),1,2,3,array(a,b,c => d, e),5,5";
-// if string starts with array do the thing else split up to first ','
-
-$stringIterated = $string;
-
-
-
-$array =
-
-function loopCheckArrayOrNot ($stringIterated) {
-    if (strpos( $stringIterated, ',' ))
-    {
-
-        $matched = checkArrayOrNot($stringIterated);
-
-    }
-}
-
-
-
-function checkArrayOrNot ($string)
-{
-
-    $data = '';
-
-    // If $string starts with "array("...
-    // It will either be "1,2,array(1,2,3 => 4)" or "array(1,2,3 => 4),2,3,4"
-    if (preg_match("/^array(/",$string))
-    {
-        // if preg_match, returns contents of as array()
-        // $match[1] = content of array // did use preg_split("/array\((.*)[,]/", $string); but instead added extra parenthesis to preg_match
-        // $match[2] = remainder of string to iterate through
-        preg_match("/array\((.*)\)[,]?(.*)/", $string, $match);
-
-        // convert $match[1] in an array()
-        $match[1] = explode(",", $match[1]);
-
-        // assign to $data array results from $match...
-        // is $match[1][n] meant to be assoc array i.e. a => b
-        foreach ($match[1] as $key => $value)
-        {
-            // convert assoc
-            if (strpos( $string, '=>' ))
-            {
-
-                preg_match('/(.*)[\s]?=>[\s]?(.*)/', $string, $matchAssoc);
-                // reassign key and value as assoc
-                $key = $matchAssoc[1];
-
-                $value = $matchAssoc[2];
-
+                return $data;
             }
-
-            $data[$key] = $value;
         }
 
-        // need the rest of the string to search through
-        $string = $match[2];
-
-    }
-    elseif (strpos( $string, ',' ))
-    {
-
-        // if does not start with array, split at first ","
-        $match = explode(",", $string, 2);
-
-        $data = $match[0];
-
-        // need the rest of the string to search through
-        $string = $match[1];
-
-    }
-    else
-    {
-        // nothing to do
-        $data = $string;
     }
 
-    // assign $data to a kind of global array and start again with new string or return
-    $dataReturn[] = $data;
 
-    // Keep looping this function if ',' otherwise return the data
-    // there will be a ',' if 1,2 or array(1,2)...
-    if (strpos( $string, ',' ))
+
+
+
+
+
+
+
+
+
+
+    /*
+    *
+    * $string = $params
+    *
+    * @tip: get string and convert to array
+    * @tip: there might be nested arrays
+    *
+    * @return: $match[0]string,[1]1st (), [2]2nd ()
+    *
+    */
+    protected static function _tcpdfGetArrayFromString ($string)
     {
-        // call this method again using recommended way
-        call_user_func_array("checkArrayOrNot", array($string));
-    }
-    else
-    {
+
+        $match = '';
+
+
+        // If $string starts with "array("...
+        // It will either be "1,2,array(1,2,3 => 4)" or "array(1,2,3 => 4),2,3,4"
+        if (preg_match("/^array(/",$string))
+        {
+
+            // if preg_match, returns contents of as array()
+            // $match[1] = content of array // did use preg_split("/array\((.*)[,]/", $string); but instead added extra parenthesis to preg_match
+            // $match[2] = remainder of string to iterate through
+            preg_match("/array\((.*)\)[,]?(.*)/", $string, $match);
+
+            // convert $match[1] in an array()
+            $match[1] = explode(",", $match[1]);
+
+            // assign to $data array results from $match...
+            // reason: is $match[1][n] meant to be assoc array i.e. a => b
+            foreach ($match[1] as $key => $value)
+            {
+                // convert assoc
+                if (strpos( $string, '=>' ))
+                {
+
+                    preg_match('/(.*)[\s]?=>[\s]?(.*)/', $string, $matchAssoc);
+                    // reassign key and value as assoc
+                    $key = $matchAssoc[1];
+
+                    $value = $matchAssoc[2];
+
+                }
+
+                $data[$key] = $value;
+            }
+
+            // reassign $match[1] with array
+            $match[1] = $data;
+
+        }
+        else
+        {
+
+            // if does not start with array, split at first ","
+            preg_match('/(.*)[\s]?,[\s]?(.*)/', $string, $match);
+        }
+
+
+
         // all done
-        return $data;
-    }
-
-
-}
-
-
-
-
-var_dump($matched);
-
-
-
-    //preg_match("/^jhon..n$/",$name);
-// preg_match_all('/<tcpdf[\s]?method="(.*?)"[\s]?params="(.*?)"[\s]?\/>/', $data, $matches);
-
-                }
-
-
-
-                if ($serialized === 1)
-                {
-
-                    $matches['params'][$key] = $pdf->serializeTCPDFtagParameters($matches['params'][$key]);
-
-                }
-
-            }
-
-
-        }
-
-        return $matches;
+        return $match;
 
     }
+
 
 
 

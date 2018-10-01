@@ -43,8 +43,8 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         */
         echo '<li><label>Create PDF</label>'
          .   JCckDev::getForm( 'jb_tcpdf_field_create_select', @$options2['create_select'], $config )
-         .   JCckDev::getForm( 'jb_tcpdf_field_create_field', @$options2['create_field'] )
-         .   JCckDev::getForm( 'jb_tcpdf_create_field_trigger', @$options2['create_field_trigger'] )
+         .   JCckDev::getForm( 'jb_tcpdf_field_create_field', @$options2['create_field'], $config )
+         .   JCckDev::getForm( 'jb_tcpdf_create_field_trigger', @$options2['create_field_trigger'], $config )
          .   '</li>';
 
 
@@ -63,7 +63,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         */
 
         echo '<li><label>Location for PDF</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_name_pdf', @$options2['name_pdf'] )
+         .   JCckDev::getForm( 'jb_tcpdf_name_pdf', @$options2['name_pdf'], $config )
          .   '</li>';
 
 
@@ -87,7 +87,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         */
 
         echo '<li><label>Destination for PDF</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_destination_pdf', @$options2['destination_pdf'] )
+         .   JCckDev::getForm( 'jb_tcpdf_destination_pdf', @$options2['destination_pdf'], $config )
          .   '</li>';
 
 
@@ -103,7 +103,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
         echo '<label>Location TCPDF</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_location_pdf', @$options2['location_pdf'] )
+         .   JCckDev::getForm( 'jb_tcpdf_location_pdf', @$options2['location_pdf'], $config )
          .   '</li>';
 
 
@@ -122,7 +122,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         */
 
         echo '<label>Settings TCPDF</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_settings', @$options2['settings'] )
+         .   JCckDev::getForm( 'jb_tcpdf_settings', @$options2['settings'], $config )
          .   '</li>';
 
 
@@ -138,7 +138,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
         echo '<label>Header</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_header', @$options2['header'] )
+         .   JCckDev::getForm( 'jb_tcpdf_header', @$options2['header'], $config )
          .   '</li>';
 
         /*
@@ -150,7 +150,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
         echo '<label>Body</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_body', @$options2['body'] )
+         .   JCckDev::getForm( 'jb_tcpdf_body', @$options2['body'], $config )
          .   '</li>';
 
 
@@ -164,7 +164,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         */
 
         echo '<label>Footer</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_footer', @$options2['footer'] )
+         .   JCckDev::getForm( 'jb_tcpdf_footer', @$options2['footer'], $config )
          .   '</li>';
 
 

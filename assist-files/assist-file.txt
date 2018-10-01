@@ -9,3 +9,26 @@
 
 
 ‹tcpdf  method=“SetFooterMargin” params=“PDF_MARGIN_FOOTER” ⁄›
+
+
+
+
+
+
+
+
+PLACEHOLDER
+
+echo '<input type="text" id="json_options2_create_field" name="json[options2][create_field]" value="" class="inputbox text" placeholder="some_field_to_override_never" size="50" maxlength="255" />';
+
+echo '<input type="text" id="json_options2_location" name="json[options2][location]" value="" class="inputbox text" placeholder="/some/location/$user-&rsaquo;id/mypdf.pdf" size="50" maxlength="255" />';
+
+echo '<input type="text" id="json_options2_location_tcpdf" name="json[options2][location_tcpdf]" value="" class="inputbox text" placeholder="location/of/tcpdf.php" size="50" maxlength="255" />';
+
+echo '<textarea id="json_options2_settings" name="json[options2][settings]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf method=&ldquo;addPageBreak&rdquo; params=&ldquo;true,10&rdquo; &frasl;&rsaquo;" col="100" rows="10" ></textarea>';
+
+echo '<textarea id="json_options2_header" name="json[options2][header]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf  method=&ldquo;SetHeaderData&rdquo; params=&ldquo;PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.\' 006\', PDF_HEADER_STRING&rdquo; &frasl;&rsaquo;" col="100" rows="10" ></textarea>';
+
+echo '<textarea id="json_options2_body" name="json[options2][body]" value="" placeholder="#some_field# &lsaquo;tcpdf  method=&ldquo;SetHeaderData&rdquo; params=&ldquo;PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.\' 006\', PDF_HEADER_STRING&rdquo; &frasl;&rsaquo;" class="inputbox text" col="100" rows="10"></textarea>';
+
+echo '<textarea id="json_options2_footer" name="json[options2][footer]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf  method=&ldquo;SetFooterMargin&rdquo; params=&ldquo;PDF_MARGIN_FOOTER&rdquo; &frasl;&rsaquo;" col="100" rows="10" ></textarea>';

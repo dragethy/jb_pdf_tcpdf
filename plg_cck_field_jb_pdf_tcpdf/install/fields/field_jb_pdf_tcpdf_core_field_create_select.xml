@@ -8,7 +8,7 @@
     <field>
         <id />
         <title>JB TCPDF Field Create Select</title>
-        <name>jb_tcpdf_field_create_select</name>
+        <name>jb_pdf_tcpdf_field_create_select</name>
         <folder>quick_folder</folder>
         <type>select_simple</type>
         <description>Select when to activater this plugin: Never, Always, Add, Edit</description>

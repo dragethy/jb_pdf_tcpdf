@@ -8,7 +8,7 @@
     <field>
         <id />
         <title>JB TCPDF Field Body</title>
-        <name>jb_tcpdf_field_body</name>
+        <name>jb_pdf_tcpdf_field_body</name>
         <folder>quick_folder</folder>
         <type>textarea</type>
         <description>Body for TCPDF</description>

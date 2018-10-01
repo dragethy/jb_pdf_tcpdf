@@ -42,9 +42,9 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
         echo '<li><label>Create PDF</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_field_create_select', @$options2['create_select'], $config )
-         .   JCckDev::getForm( 'jb_tcpdf_field_create_field', @$options2['create_field'], $config )
-         .   JCckDev::getForm( 'jb_tcpdf_create_field_trigger', @$options2['create_field_trigger'], $config )
+         .   JCckDev::renderForm( 'jb_pdf_tcpdf_field_create_select', @$options2['create_select'], $config )
+         .   JCckDev::renderForm( 'jb_pdf_tcpdf_field_create_field', @$options2['create_field'], $config )
+         .   JCckDev::renderForm( 'jb_pdf_tcpdf_create_field_trigger', @$options2['create_field_trigger'], $config )
          .   '</li>';
 
 
@@ -54,7 +54,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
 
         /*
         *
-        * location
+        * name_pdf
         *
         * @options: Text [$user,$uri,$fields,#field_name#]
         * @tip: tcpdf have this as 'name' but that competes with a Seblod useage
@@ -63,7 +63,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         */
 
         echo '<li><label>Location for PDF</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_name_pdf', @$options2['name_pdf'], $config )
+         .   JCckDev::renderForm( 'jb_pdf_tcpdf_name_pdf', @$options2['name_pdf'], $config )
          .   '</li>';
 
 
@@ -72,7 +72,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
 
         /*
         *
-        * destination
+        * destination_pdf
         * @options: I,D,F,S,FI,FD,E
         *
         * @tip: I: send the file inline to the browser (default). The plug-in is used if available. The name given by name is used when one selects the "Save as" option on the link generating the PDF.
@@ -87,7 +87,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         */
 
         echo '<li><label>Destination for PDF</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_destination_pdf', @$options2['destination_pdf'], $config )
+         .   JCckDev::renderForm( 'jb_pdf_tcpdf_destination_pdf', @$options2['destination_pdf'], $config )
          .   '</li>';
 
 
@@ -95,15 +95,15 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
 
         /*
         *
-        * tcpdf
+        * name_tcpdf
         *
         * @options: Text
         * @tip: Enter location and name of tcpdf.php file
         * @example: /libraries/tcpdf/tcpdf.php
         *
         */
-        echo '<label>Location TCPDF</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_location_pdf', @$options2['location_pdf'], $config )
+        echo '<label>Name TCPDF</label>'
+         .   JCckDev::renderForm( 'jb_pdf_tcpdf_name_tcpdf', @$options2['name_tcpdf'], $config )
          .   '</li>';
 
 
@@ -122,7 +122,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         */
 
         echo '<label>Settings TCPDF</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_settings', @$options2['settings'], $config )
+         .   JCckDev::renderForm( 'jb_pdf_tcpdf_settings', @$options2['settings'], $config )
          .   '</li>';
 
 
@@ -138,7 +138,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
         echo '<label>Header</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_header', @$options2['header'], $config )
+         .   JCckDev::renderForm( 'jb_pdf_tcpdf_header', @$options2['header'], $config )
          .   '</li>';
 
         /*
@@ -150,7 +150,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
         echo '<label>Body</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_body', @$options2['body'], $config )
+         .   JCckDev::renderForm( 'jb_pdf_tcpdf_body', @$options2['body'], $config )
          .   '</li>';
 
 
@@ -164,7 +164,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         */
 
         echo '<label>Footer</label>'
-         .   JCckDev::getForm( 'jb_tcpdf_footer', @$options2['footer'], $config )
+         .   JCckDev::renderForm( 'jb_pdf_tcpdf_footer', @$options2['footer'], $config )
          .   '</li>';
 
 
@@ -172,7 +172,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         // RenderHelp forces a dodgy link so need to hardcode or do something else
         echo JCckDev::renderHelp( 'field', 'pdf-plugin' );
         echo JCckDev::renderSpacer( JText::_( 'COM_CCK_STORAGE' ), JText::_( 'COM_CCK_STORAGE_DESC' ) );
-        echo JCckDev::getForm( 'core_storage', $this->item->storage, $config );
+        echo JCckDev::renderForm( 'core_storage', $this->item->storage, $config );
         ?>
     </ul>
 </div>

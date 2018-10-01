@@ -7,13 +7,13 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB TCPDF Field Create Field Trigger</title>
-        <name>jb_tcpdf_field_create_field_trigger</name>
+        <title>JB TCPDF Field Footer</title>
+        <name>jb_pdf_tcpdf_field_footer</name>
         <folder>quick_folder</folder>
-        <type>text</type>
-        <description>Select the value from the field that will activate/trigger this plugin</description>
+        <type>textarea</type>
+        <description>Footer for TCPDF</description>
         <published />
-        <label>Trigger Value of Field</label>
+        <label>Footer</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />
@@ -46,7 +46,7 @@
         <storage>dev</storage>
         <storage_location />
         <storage_table />
-        <storage_field>json[options2][create_field_trigger]</storage_field>
+        <storage_field>json[options2][footer]</storage_field>
         <storage_field2 />
         <storage_params />
         <storages />

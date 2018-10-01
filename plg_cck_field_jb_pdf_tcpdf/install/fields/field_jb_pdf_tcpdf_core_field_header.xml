@@ -7,13 +7,13 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB TCPDF Field Create Field</title>
-        <name>jb_tcpdf_field_create_field</name>
+        <title>JB TCPDF Field Header</title>
+        <name>jb_pdf_tcpdf_field_header</name>
         <folder>quick_folder</folder>
-        <type>text</type>
-        <description>Select which field will override 'Never'</description>
+        <type>textarea</type>
+        <description>Header for TCPDF</description>
         <published />
-        <label>Field to Trigger Plugin</label>
+        <label>Header</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />
@@ -46,7 +46,7 @@
         <storage>dev</storage>
         <storage_location />
         <storage_table />
-        <storage_field>json[options2][create_field]</storage_field>
+        <storage_field>json[options2][header]</storage_field>
         <storage_field2 />
         <storage_params />
         <storages />

@@ -1,1 +1,1 @@
-zip -r -X jb_pdf_tcpdf-test.zip jb_pdf_tcpdf
+zip -r -X jb_pdf_tcpdf-test.zip plg_cck_field_jb_pdf_tcpdf

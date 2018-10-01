@@ -7,8 +7,8 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB Core Field Name</title>
-        <name>jb_core_field_name_tcpdf</name>
+        <title>JB TCPDF Field Name TCPDF</title>
+        <name>jb_tcpdf_field_name_tcpdf</name>
         <folder>quick_folder</folder>
         <type>text</type>
         <description>Name of TCPDF file including containing folders</description>

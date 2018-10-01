@@ -1,6 +1,6 @@
 <?php
 /**
-* @version          SEBLOD 3.x Core
+* @version          SEBLOD 3.x TCPDF
 * @package          SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url              https://www.seblod.com
 * @editor           Octopoos - www.octopoos.com
@@ -25,6 +25,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
     <ul class="adminformlist adminformlist-2cols">
         <?php
 
+        echo JCckDev::renderForm( 'core_label', $this->item->label, $config );
         /*
         *
         * create_select
@@ -40,18 +41,13 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         * @example: you could then have another pdf plugin with create_field_trigger set as "portrait".
         *
         */
+        echo '<li><label>Create PDF</label>'
+         .   JCckDev::getForm( 'jb_tcpdf_field_create_select', @$options2['create_select'], $config )
+         .   JCckDev::getForm( 'jb_tcpdf_field_create_field', @$options2['create_field'] )
+         .   JCckDev::getForm( 'jb_tcpdf_create_field_trigger', @$options2['create_field_trigger'] )
+         .   '</li>';
 
-        echo '<label>Create PDF</label>';
-        echo '<select id="json_options2_create_select" name="json[options2][create_select]" class="inputbox select has-value">
-                  <option value="0" selected="selected">Never</option>
-                  <option value="3">Always</option>
-                  <optgroup label="Workflow">
-                      <option value="1">Add</option>
-                      <option value="2">Edit</option>
-                  </optgroup>
-              </select>';
-        echo '<input type="text" id="json_options2_create_field" name="json[options2][create_field]" value="" class="inputbox text" placeholder="some_field_to_override_never" size="50" maxlength="255" />';
-        echo '<input type="text" id="json_options2_create_field_trigger" name="json[options2][create_field_trigger]" value="" class="inputbox text" placeholder="If field, what value triggers this plugin" size="50" maxlength="255" />';
+
 
 
 
@@ -66,8 +62,9 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
 
-        echo '<label>Location for PDF</label>';
-        echo '<input type="text" id="json_options2_location" name="json[options2][location]" value="" class="inputbox text" placeholder="/some/location/$user-&rsaquo;id/mypdf.pdf" size="50" maxlength="255" />';
+        echo '<li><label>Location for PDF</label>'
+         .   JCckDev::getForm( 'jb_tcpdf_name_pdf', @$options2['name_pdf'] )
+         .   '</li>';
 
 
 
@@ -89,16 +86,10 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
 
-        echo '<label>Destination</label>';
-        echo '<select id="json_options2_destination" name="json[options2][destination]" class="inputbox select has-value">
-                  <option value="I" selected="selected">I</option>
-                  <option value="D">D</option>
-                  <option value="F">F</option>
-                  <option value=S"">S</option>
-                  <option value="FI">FI</option>
-                  <option value="FD">FD</option>
-                  <option value="E">E</option>
-              </select>';
+        echo '<li><label>Destination for PDF</label>'
+         .   JCckDev::getForm( 'jb_tcpdf_destination_pdf', @$options2['destination_pdf'] )
+         .   '</li>';
+
 
 
 
@@ -111,16 +102,13 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         * @example: /libraries/tcpdf/tcpdf.php
         *
         */
-        echo '<label>Location TCPDF</label>';
-        echo '<input type="text" id="json_options2_location_tcpdf" name="json[options2][location_tcpdf]" value="" class="inputbox text" placeholder="location/of/tcpdf.php" size="50" maxlength="255" />';
+        echo '<label>Location TCPDF</label>'
+         .   JCckDev::getForm( 'jb_tcpdf_location_pdf', @$options2['location_pdf'] )
+         .   '</li>';
 
 
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> master
         /*
         *
         * settings
@@ -133,9 +121,9 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
 
-        echo '<label>TCPDF Settings</label>';
-        echo '<textarea id="json_options2_settings" name="json[options2][settings]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf method=&ldquo;addPageBreak&rdquo; params=&ldquo;true,10&rdquo; &frasl;&rsaquo;" col="100" rows="10" ></textarea>';
-
+        echo '<label>Settings TCPDF</label>'
+         .   JCckDev::getForm( 'jb_tcpdf_settings', @$options2['settings'] )
+         .   '</li>';
 
 
         /*
@@ -149,9 +137,9 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         * @example: output as $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING);
         *
         */
-        echo '<label>Header</label>';
-        echo '<textarea id="json_options2_header" name="json[options2][header]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf  method=&ldquo;SetHeaderData&rdquo; params=&ldquo;PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.\' 006\', PDF_HEADER_STRING&rdquo; &frasl;&rsaquo;" col="100" rows="10" ></textarea>';
-
+        echo '<label>Header</label>'
+         .   JCckDev::getForm( 'jb_tcpdf_header', @$options2['header'] )
+         .   '</li>';
 
         /*
         *
@@ -161,9 +149,9 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         * @tip: Accepts [$user,$uri,$fields,#field_name#]
         *
         */
-        echo '<label>Body</label>';
-        echo '<textarea id="json_options2_body" name="json[options2][body]" value="" placeholder="#some_field# &lsaquo;tcpdf  method=&ldquo;SetHeaderData&rdquo; params=&ldquo;PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.\' 006\', PDF_HEADER_STRING&rdquo; &frasl;&rsaquo;" class="inputbox text" col="100" rows="10"></textarea>';
-
+        echo '<label>Body</label>'
+         .   JCckDev::getForm( 'jb_tcpdf_body', @$options2['body'] )
+         .   '</li>';
 
 
         /*
@@ -174,9 +162,10 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         * @tip: Accepts [$user,$uri,$fields,#field_name#]
         *
         */
-        echo '<label>Footer</label>';
-        echo '<textarea id="json_options2_footer" name="json[options2][footer]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf  method=&ldquo;SetFooterMargin&rdquo; params=&ldquo;PDF_MARGIN_FOOTER&rdquo; &frasl;&rsaquo;" col="100" rows="10" ></textarea>';
 
+        echo '<label>Footer</label>'
+         .   JCckDev::getForm( 'jb_tcpdf_footer', @$options2['footer'] )
+         .   '</li>';
 
 
         // Add link to tutorial on forum i.e. https://www.seblod.com/community/forums/fields-plug-ins/pdf-plugin

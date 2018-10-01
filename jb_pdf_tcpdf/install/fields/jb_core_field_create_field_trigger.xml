@@ -7,8 +7,8 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB Core Field Create Field Trigger</title>
-        <name>jb_core_field_create_field_trigger</name>
+        <title>JB TCPDF Field Create Field Trigger</title>
+        <name>jb_tcpdf_field_create_field_trigger</name>
         <folder>quick_folder</folder>
         <type>text</type>
         <description>Select the value from the field that will activate/trigger this plugin</description>

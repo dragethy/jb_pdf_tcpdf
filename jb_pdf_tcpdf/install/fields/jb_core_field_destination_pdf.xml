@@ -7,19 +7,19 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB Core Field Name</title>
-        <name>jb_core_field_name</name>
+        <title>JB TCPDF Field Destination PDF</title>
+        <name>jb_tcpdf_field_destination_pdf</name>
         <folder>quick_folder</folder>
-        <type>textarea</type>
-        <description>Name of the PDF including containing folders</description>
+        <type>select_simple</type>
+        <description>Destination of PDF when made, view in browser etc...</description>
         <published />
-        <label>Name of PDF</label>
+        <label>Select Trigger</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />
         <validation />
         <defaultvalue />
-        <options />
+        <options>I=I||D=D||F=F||S=S||FI=FI||FD=FD||E=E</option></options>
         <options2 />
         <minlength />
         <maxlength>255</maxlength>
@@ -46,7 +46,7 @@
         <storage>dev</storage>
         <storage_location />
         <storage_table />
-        <storage_field>json[options2][name]</storage_field>
+        <storage_field>json[options2][destination_pdf]</storage_field>
         <storage_field2 />
         <storage_params />
         <storages />

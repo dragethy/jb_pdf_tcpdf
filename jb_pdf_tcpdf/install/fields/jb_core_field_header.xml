@@ -7,8 +7,8 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB Core Field Header</title>
-        <name>jb_core_field_header</name>
+        <title>JB TCPDF Field Header</title>
+        <name>jb_tcpdf_field_header</name>
         <folder>quick_folder</folder>
         <type>textarea</type>
         <description>Header for TCPDF</description>

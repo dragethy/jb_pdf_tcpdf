@@ -1,6 +1,6 @@
     <?php
     /**
-    * @version          SEBLOD 3.x Core
+    * @version          SEBLOD 3.x TCPDF
     * @package          SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
     * @url              https://www.seblod.com
     * @editor           Octopoos - www.octopoos.com
@@ -144,11 +144,11 @@
             // what value from that field is the trigger, default is 1
             $create_field_trigger   =   ( isset( $options2['create_field_trigger'] ) && strlen( $options2['create_field_trigger'] ) > 0 ) ? $options2['create_field_trigger'] : 1;
             // location i.e. some/folder/mypdf.pdf
-            $location   =   ( isset( $options2['location'] ) && strlen( $options2['location'] ) > 0 ) ? $options2['location'] : JPATH_SITE.'/'.'images/mypdf.pdf';
+            $name_pdf =   ( isset( $options2['name_pdf'] ) && strlen( $options2['name_pdf'] ) > 0 ) ? $options2['name_pdf'] : JPATH_SITE.'/'.'images/mypdf.pdf';
             //  where to send i.e to browser etc https://www.rubydoc.info/gems/rfpdf/1.17.1/TCPDF:Output
-            $destination   =   ( isset( $options2['destination'] ) && strlen( $options2['destination'] ) > 0 ) ? $options2['destination'] : 'F';
+            $destination_pdf   =   ( isset( $options2['destination_pdf'] ) && strlen( $options2['destination_pdf'] ) > 0 ) ? $options2['destination_pdf'] : 'F';
             // where the tcpdf stuff is
-            $location_tcpdf   =   ( isset( $options2['location_tcpdf'] ) && strlen( $options2['location_tcpdf'] ) > 0 ) ? $options2['location_tcpdf'] : JPATH_SITE.'/'.'libraries'.'/'.'TCPDF-master'.'/'.'tcpdf.php';
+            $name_tcpdf   =   ( isset( $options2['name_tcpdf'] ) && strlen( $options2['name_tcpdf'] ) > 0 ) ? $options2['name_tcpdf'] : JPATH_SITE.'/'.'libraries'.'/'.'TCPDF-master'.'/'.'tcpdf.php';
             // split strings by this value, might be redundant now
             $settings   =   ( isset( $options2['settings'] ) ) ? $options2['settings'] : '';
             $header =   ( isset( $options2['header'] ) ) ? $options2['header'] : '';
@@ -197,9 +197,9 @@
                     'create_select'=>$create_select,
                     'create_field'=>$create_field,
                     'create_field_trigger'=>$create_field_trigger,
-                    'location'=>$location,
-                    'destination'=>$destination,
-                    'location_tcpdf'=>$location_tcpdf,
+                    'name_pdf'=>$name_pdf,
+                    'destination_pdf'=>$destination_pdf,
+                    'name_tcpdf'=>$name_tcpdf,
                     'settings'=>$settings,
                     'header'=>$header,
                     'body'=>$body,
@@ -250,14 +250,14 @@
             // str_replace Seblod stuff
             // $storages and $config are TODO, but first I need to provide 'enable' optiion in field settings
 
-            if ( $process['location'] )
+            if ( $process['name_pdf'] )
             {
-                $process['location'] = self::_tcpdfSetDynamicValues($process['location'], $fields, $storages, $config );
+                $process['name_pdf'] = self::_tcpdfSetDynamicValues($process['name_pdf'], $fields, $storages, $config );
             }
 
-            if ( $process['destination'] )
+            if ( $process['destination_pdf'] )
             {
-                $process['destination'] = self::_tcpdfSetDynamicValues($process['destination'], $fields, $storages, $config );
+                $process['destination_pdf'] = self::_tcpdfSetDynamicValues($process['destination_pdf'], $fields, $storages, $config );
             }
 
             if ( $process['settings'] )
@@ -839,7 +839,7 @@ JFactory::getApplication()->enqueueMessage($message , '_tcpdfSetDynamicValues');
         {
 
             //  require_once('tcpdf_include.php');
-            require_once($data['location_tcpdf']);
+            require_once($data['name_tcpdf']);
 
             // initiate
             $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -878,7 +878,7 @@ JFactory::getApplication()->enqueueMessage($message , '_tcpdfSetDynamicValues');
             }
 
             // // create the title for pdf (used in 'save as' option on computer.)
-            $pdf->Output($data['location'], $data['destination']);
+            $pdf->Output($data['name_pdf'], $data['destination_pdf']);
 
         }
     } // END OF PLUGIN

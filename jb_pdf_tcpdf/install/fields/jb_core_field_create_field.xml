@@ -7,8 +7,8 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB Core Field Create Field</title>
-        <name>jb_core_field_create_field</name>
+        <title>JB TCPDF Field Create Field</title>
+        <name>jb_tcpdf_field_create_field</name>
         <folder>quick_folder</folder>
         <type>text</type>
         <description>Select which field will override 'Never'</description>

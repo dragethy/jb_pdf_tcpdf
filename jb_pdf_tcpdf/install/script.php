@@ -1,6 +1,6 @@
 <?php
 /**
-* @version 			SEBLOD 3.x Core
+* @version 			SEBLOD 3.x TCPDF
 * @package			SEBLOD (App Builder & CCK) // SEBLOD nano (Form Builder)
 * @url				https://www.seblod.com
 * @editor			Octopoos - www.octopoos.com

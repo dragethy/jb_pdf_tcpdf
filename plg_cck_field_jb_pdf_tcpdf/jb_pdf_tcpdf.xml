@@ -13,7 +13,8 @@
 	<scriptfile>install/script.php</scriptfile>
 
 	<files>
-		<folder>install</folder>
+        <folder>install</folder>
+		<folder>install/fields</folder>
 		<folder>languages</folder>
 		<folder>assets</folder>
 		<folder>classes</folder>

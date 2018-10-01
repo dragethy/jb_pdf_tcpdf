@@ -19,7 +19,7 @@
         <required />
         <validation />
         <defaultvalue />
-        <options>I=I||D=D||F=F||S=S||FI=FI||FD=FD||E=E</option>
+        <options>I=I||D=D||F=F||S=S||FI=FI||FD=FD||E=E</options>
         <options2 />
         <minlength />
         <maxlength>255</maxlength>

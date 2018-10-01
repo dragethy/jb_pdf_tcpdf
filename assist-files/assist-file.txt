@@ -1,0 +1,11 @@
+‹tcpdf method=“addPageBreak” params=“true,10” ⁄›
+
+
+‹tcpdf  method=“SetHeaderData” params=“PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING” ⁄›
+
+
+
+#art_title#,#art_alias# $cck->getText('choose_file_types');$uri->get('id');‹tcpdf  method=“SetHeaderData” params=“PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING” ⁄›
+
+
+‹tcpdf  method=“SetFooterMargin” params=“PDF_MARGIN_FOOTER” ⁄›

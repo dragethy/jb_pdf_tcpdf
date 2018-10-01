@@ -7,7 +7,7 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB TCPDF Core Field Destination PDF</title>
+        <title>JB PDF TCPDF Destination PDF</title>
         <name>jb_pdf_tcpdf_destination_pdf</name>
         <folder>quick_folder</folder>
         <type>select_simple</type>

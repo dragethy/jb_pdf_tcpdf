@@ -7,11 +7,11 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB TCPDF Core Field Footer</title>
+        <title>JB PDF TCPDF Footer</title>
         <name>jb_pdf_tcpdf_footer</name>
         <folder>quick_folder</folder>
         <type>textarea</type>
-        <description>Footer for TCPDF</description>
+        <description>Footer Data for TCPDF use tags to apply any method and it's params. Footer is separate from Settings just to help keep things organised.</description>
         <published />
         <label>Footer</label>
         <selectlabel> </selectlabel>

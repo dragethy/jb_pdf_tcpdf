@@ -7,11 +7,11 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB TCPDF Core Field Header</title>
+        <title>JB PDF TCPDF Header</title>
         <name>jb_pdf_tcpdf_header</name>
         <folder>quick_folder</folder>
         <type>textarea</type>
-        <description>Header for TCPDF</description>
+        <description>Header Data for TCPDF use tags to apply any method and it's params. Header is separate from Settings just to help keep things organised.</description>
         <published />
         <label>Header</label>
         <selectlabel> </selectlabel>

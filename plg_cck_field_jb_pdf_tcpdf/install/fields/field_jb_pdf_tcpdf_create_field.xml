@@ -7,11 +7,11 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB TCPDF Core Field Create Field</title>
+        <title>JB PDF TCPDF Create Field</title>
         <name>jb_pdf_tcpdf_create_field</name>
         <folder>quick_folder</folder>
         <type>text</type>
-        <description>Select which field will override 'Never'</description>
+        <description>Select which field will override 'Never' i.e. "some_custom_field"</description>
         <published />
         <label>Field to Trigger Plugin</label>
         <selectlabel> </selectlabel>

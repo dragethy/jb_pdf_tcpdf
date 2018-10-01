@@ -7,13 +7,13 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB TCPDF Core Field Create Field Trigger</title>
+        <title>JB PDF TCPDF Create Field Trigger</title>
         <name>jb_pdf_tcpdf_create_field_trigger</name>
         <folder>quick_folder</folder>
         <type>text</type>
-        <description>Select the value from the field that will activate/trigger this plugin</description>
+        <description>Assign the value from "create_field" that will activate/trigger this plugin.</description>
         <published />
-        <label>Trigger Value of Field</label>
+        <label>Trigger Value for "Create Field"</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />

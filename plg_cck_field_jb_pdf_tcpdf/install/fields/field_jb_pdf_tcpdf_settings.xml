@@ -7,7 +7,7 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB TCPDF Core Field Settings</title>
+        <title>JB PDF TCPDF Settings</title>
         <name>jb_pdf_tcpdf_settings</name>
         <folder>quick_folder</folder>
         <type>textarea</type>

@@ -7,11 +7,12 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB TCPDF Core Field Body</title>
+        <title>JB PDF TCPDF Body</title>
         <name>jb_pdf_tcpdf_body</name>
         <folder>quick_folder</folder>
         <type>textarea</type>
         <description>Body for TCPDF</description>
+        <description>Body Data for TCPDF. Embed tags in to your html, assign dynamic data i.e. $user, #some_field#, $uri.</description>
         <published />
         <label>Body</label>
         <selectlabel> </selectlabel>

@@ -7,11 +7,11 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB TCPDF Core Field Name PDF</title>
+        <title>JB PDF TCPDF Name PDF</title>
         <name>jb_pdf_tcpdf_name_pdf</name>
         <folder>quick_folder</folder>
         <type>text</type>
-        <description>Name of the PDF including containing folders</description>
+        <description>Name of the PDF including containing folders i.e. some/folder/$user->name/$uri->get('id')/#some_field#/some.pdf</description>
         <published />
         <label>Name of PDF</label>
         <selectlabel> </selectlabel>

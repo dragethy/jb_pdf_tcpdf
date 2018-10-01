@@ -7,11 +7,11 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB TCPDF Core Field Name TCPDF</title>
+        <title>JB PDF TCPDF Name TCPDF</title>
         <name>jb_pdf_tcpdf_name_tcpdf</name>
         <folder>quick_folder</folder>
         <type>text</type>
-        <description>Name of TCPDF file including containing folders</description>
+        <description>Name of TCPDF's php file including containing folders i.e. some/folder/tcpdf.php</description>
         <published />
         <label>Name of TCPDF file</label>
         <selectlabel> </selectlabel>

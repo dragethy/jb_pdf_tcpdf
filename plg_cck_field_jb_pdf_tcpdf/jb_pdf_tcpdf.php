@@ -143,7 +143,7 @@
             $create_field = ( isset( $options2['create_field'] ) && strlen( $options2['create_field'] ) > 0 ) ? $options2['create_field'] : 0;
             // what value from that field is the trigger, default is 1
             $create_field_trigger   =   ( isset( $options2['create_field_trigger'] ) && strlen( $options2['create_field_trigger'] ) > 0 ) ? $options2['create_field_trigger'] : 1;
-            // location i.e. some/folder/mypdf.pdf
+            // name_pdf i.e. some/folder/mypdf.pdf
             $name_pdf =   ( isset( $options2['name_pdf'] ) && strlen( $options2['name_pdf'] ) > 0 ) ? $options2['name_pdf'] : JPATH_SITE.'/'.'images/mypdf.pdf';
             //  where to send i.e to browser etc https://www.rubydoc.info/gems/rfpdf/1.17.1/TCPDF:Output
             $destination_pdf   =   ( isset( $options2['destination_pdf'] ) && strlen( $options2['destination_pdf'] ) > 0 ) ? $options2['destination_pdf'] : 'F';

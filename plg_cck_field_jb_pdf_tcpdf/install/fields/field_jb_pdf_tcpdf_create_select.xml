@@ -7,19 +7,19 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB TCPDF Field Name TCPDF</title>
-        <name>jb_pdf_tcpdf_field_name_tcpdf</name>
+        <title>JB TCPDF Core Field Create Select</title>
+        <name>jb_pdf_tcpdf_create_select</name>
         <folder>quick_folder</folder>
-        <type>text</type>
-        <description>Name of TCPDF file including containing folders</description>
+        <type>select_simple</type>
+        <description>Select when to activater this plugin: Never, Always, Add, Edit</description>
         <published />
-        <label>Name of TCPDF file</label>
+        <label>Select Trigger</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />
         <validation />
         <defaultvalue />
-        <options />
+        <options>Never=0||Always=3||Add=1||Edit=2</options>
         <options2 />
         <minlength />
         <maxlength>255</maxlength>
@@ -46,7 +46,7 @@
         <storage>dev</storage>
         <storage_location />
         <storage_table />
-        <storage_field>json[options2][name_tcpdf]</storage_field>
+        <storage_field>json[options2][create_select]</storage_field>
         <storage_field2 />
         <storage_params />
         <storages />

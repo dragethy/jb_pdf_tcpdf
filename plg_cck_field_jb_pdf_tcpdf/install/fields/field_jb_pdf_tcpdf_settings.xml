@@ -7,13 +7,13 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB TCPDF Field Body</title>
-        <name>jb_pdf_tcpdf_field_body</name>
+        <title>JB TCPDF Core Field Settings</title>
+        <name>jb_pdf_tcpdf_settings</name>
         <folder>quick_folder</folder>
         <type>textarea</type>
-        <description>Body for TCPDF</description>
+        <description>Settings for TCPDF</description>
         <published />
-        <label>Body</label>
+        <label>Settings</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />
@@ -46,7 +46,7 @@
         <storage>dev</storage>
         <storage_location />
         <storage_table />
-        <storage_field>json[options2][body]</storage_field>
+        <storage_field>json[options2][settings]</storage_field>
         <storage_field2 />
         <storage_params />
         <storages />

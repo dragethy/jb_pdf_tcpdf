@@ -7,13 +7,13 @@
     <license>GNU General Public License version 2 or later.</license>
     <field>
         <id />
-        <title>JB TCPDF Field Header</title>
-        <name>jb_pdf_tcpdf_field_header</name>
+        <title>JB TCPDF Core Field Name TCPDF</title>
+        <name>jb_pdf_tcpdf_name_tcpdf</name>
         <folder>quick_folder</folder>
-        <type>textarea</type>
-        <description>Header for TCPDF</description>
+        <type>text</type>
+        <description>Name of TCPDF file including containing folders</description>
         <published />
-        <label>Header</label>
+        <label>Name of TCPDF file</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />
@@ -46,7 +46,7 @@
         <storage>dev</storage>
         <storage_location />
         <storage_table />
-        <storage_field>json[options2][header]</storage_field>
+        <storage_field>json[options2][name_tcpdf]</storage_field>
         <storage_field2 />
         <storage_params />
         <storages />

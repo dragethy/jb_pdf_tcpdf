@@ -12,7 +12,7 @@
         <folder>quick_folder</folder>
         <type>textarea</type>
         <description>Body for TCPDF</description>
-        <description>Body Data for TCPDF. Embed tags in to your html, assign dynamic data i.e. $user, #some_field#, $uri.</description>
+        <description>Body Data for TCPDF. Embed tags in to your html, and assign dynamic data i.e. $user, #some_field#, $uri.</description>
         <published />
         <label>Body</label>
         <selectlabel> </selectlabel>

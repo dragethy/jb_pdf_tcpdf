@@ -13,7 +13,7 @@
         <type>textarea</type>
         <description>Header Data for TCPDF use tags to apply any method and it's params. Header is separate from Settings just to help keep things organised.</description>
         <published />
-        <label>Header</label>
+        <label>HEADER_TCPDF</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />

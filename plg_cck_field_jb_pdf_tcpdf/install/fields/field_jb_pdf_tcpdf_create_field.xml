@@ -13,7 +13,7 @@
         <type>text</type>
         <description>Select which field will override 'Never' i.e. "some_custom_field"</description>
         <published />
-        <label>Field to Trigger Plugin</label>
+        <label>CREATE_FIELD</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />

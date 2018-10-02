@@ -8,7 +8,7 @@
     <copyright>Copyright (C) 2018 Jon Buckner. All Rights Reserved.</copyright>
     <license>GNU General Public License version 2 or later.</license>
     <version>1.0.0</version>
-    <description>Create PDF's using tags to set mathods and their paramters. Dynamic values accepted. All thanks to tcpdf.org</description>
+    <description>PLG_CCK_FIELD_JB_PDF_TCPDF_DESCRIPTION</description>
 
 	<scriptfile>install/script.php</scriptfile>
 

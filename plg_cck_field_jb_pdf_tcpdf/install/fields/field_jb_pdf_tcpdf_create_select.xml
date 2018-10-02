@@ -13,7 +13,7 @@
         <type>select_simple</type>
         <description>Select when to activate this plugin: Never, Always, Add, Edit (same as in Seblod's Email field)</description>
         <published />
-        <label>Select Trigger</label>
+        <label>CREATE_SELECT</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />

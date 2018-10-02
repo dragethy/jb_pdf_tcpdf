@@ -48,6 +48,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
 
 
 
+
         /*
         *
         * name_pdf
@@ -97,7 +98,6 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
 
 
 
-
         /*
         *
         * settings
@@ -111,9 +111,9 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         */
 
         echo JCckDev::renderForm( 'jb_pdf_tcpdf_settings', @$options2['settings'], $config );
-        
-        
-        
+
+
+
 
         /*
         *
@@ -122,14 +122,14 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         * @tip: same functionality as Seblod's Email Message field
         * @tip: Accepts [$user,$uri,$fields,#field_name#]
         *
-        * @example: <tcpdf  method="SetHeaderData" params="PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING" />
+        * @example: <tcpdf method="SetHeaderData" params="PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING" />
         * @example: output as $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING);
         *
         */
         echo JCckDev::renderForm( 'jb_pdf_tcpdf_header', @$options2['header'], $config );
-        
-        
-        
+
+
+
 
         /*
         *
@@ -140,8 +140,8 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
         echo JCckDev::renderForm( 'jb_pdf_tcpdf_body', @$options2['body'], $config );
-        
-        
+
+
 
 
         /*
@@ -154,8 +154,10 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         */
 
         echo JCckDev::renderForm( 'jb_pdf_tcpdf_footer', @$options2['footer'], $config );
-        
-        
+
+
+
+
 
 
         // Add link to tutorial on forum i.e. https://www.seblod.com/community/forums/fields-plug-ins/pdf-plugin

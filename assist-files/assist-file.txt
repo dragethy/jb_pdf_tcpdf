@@ -1,14 +1,14 @@
 ‹tcpdf method=“addPageBreak” params=“true,10” ⁄›
 
 
-‹tcpdf  method=“SetHeaderData” params=“PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING” ⁄›
+‹tcpdf method=“SetHeaderData” params=“PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING” ⁄›
 
 
 
-#art_title#,#art_alias# $cck->getText('choose_file_types');$uri->get('id');‹tcpdf  method=“SetHeaderData” params=“PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING” ⁄›
+#art_title#,#art_alias# $cck->getText('choose_file_types');$uri->get('id');‹tcpdf method=“SetHeaderData” params=“PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING” ⁄›
 
 
-‹tcpdf  method=“SetFooterMargin” params=“PDF_MARGIN_FOOTER” ⁄›
+‹tcpdf method=“SetFooterMargin” params=“PDF_MARGIN_FOOTER” ⁄›
 
 
 
@@ -27,8 +27,8 @@ echo '<input type="text" id="json_options2_location_tcpdf" name="json[options2][
 
 echo '<textarea id="json_options2_settings" name="json[options2][settings]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf method=&ldquo;addPageBreak&rdquo; params=&ldquo;true,10&rdquo; &frasl;&rsaquo;" col="100" rows="10" ></textarea>';
 
-echo '<textarea id="json_options2_header" name="json[options2][header]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf  method=&ldquo;SetHeaderData&rdquo; params=&ldquo;PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.\' 006\', PDF_HEADER_STRING&rdquo; &frasl;&rsaquo;" col="100" rows="10" ></textarea>';
+echo '<textarea id="json_options2_header" name="json[options2][header]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf method=&ldquo;SetHeaderData&rdquo; params=&ldquo;PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.\' 006\', PDF_HEADER_STRING&rdquo; &frasl;&rsaquo;" col="100" rows="10" ></textarea>';
 
-echo '<textarea id="json_options2_body" name="json[options2][body]" value="" placeholder="#some_field# &lsaquo;tcpdf  method=&ldquo;SetHeaderData&rdquo; params=&ldquo;PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.\' 006\', PDF_HEADER_STRING&rdquo; &frasl;&rsaquo;" class="inputbox text" col="100" rows="10"></textarea>';
+echo '<textarea id="json_options2_body" name="json[options2][body]" value="" placeholder="#some_field# &lsaquo;tcpdf method=&ldquo;SetHeaderData&rdquo; params=&ldquo;PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.\' 006\', PDF_HEADER_STRING&rdquo; &frasl;&rsaquo;" class="inputbox text" col="100" rows="10"></textarea>';
 
-echo '<textarea id="json_options2_footer" name="json[options2][footer]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf  method=&ldquo;SetFooterMargin&rdquo; params=&ldquo;PDF_MARGIN_FOOTER&rdquo; &frasl;&rsaquo;" col="100" rows="10" ></textarea>';
+echo '<textarea id="json_options2_footer" name="json[options2][footer]" value="" class="inputbox text" placeholder="&lsaquo;tcpdf method=&ldquo;SetFooterMargin&rdquo; params=&ldquo;PDF_MARGIN_FOOTER&rdquo; &frasl;&rsaquo;" col="100" rows="10" ></textarea>';

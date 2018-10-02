@@ -13,7 +13,7 @@
         <type>textarea</type>
         <description>Body Data for TCPDF. Embed tags in to your html, and assign dynamic data i.e. $user, #some_field#, $uri.</description>
         <published />
-        <label>Body PDF</label>
+        <label>BODY_TCPDF</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />

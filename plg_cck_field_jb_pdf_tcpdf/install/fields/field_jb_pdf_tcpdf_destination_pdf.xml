@@ -13,7 +13,7 @@
         <type>select_simple</type>
         <description>Destination of PDF when made, view in browser etc...</description>
         <published />
-        <label>Select Trigger</label>
+        <label>DESTINATION_PDF</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />

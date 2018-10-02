@@ -13,7 +13,7 @@
         <type>text</type>
         <description>Name of TCPDF's php file including containing folders i.e. some/folder/tcpdf.php</description>
         <published />
-        <label>Name of TCPDF file</label>
+        <label>NAME_TCPDF_FILE</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />

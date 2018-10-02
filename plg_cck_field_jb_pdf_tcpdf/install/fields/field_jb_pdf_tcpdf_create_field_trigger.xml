@@ -13,7 +13,7 @@
         <type>text</type>
         <description>Assign the value from "create_field" that will activate/trigger this plugin.</description>
         <published />
-        <label>Trigger Value for "Create Field"</label>
+        <label>CREATE_FIELD_TRIGGER</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />

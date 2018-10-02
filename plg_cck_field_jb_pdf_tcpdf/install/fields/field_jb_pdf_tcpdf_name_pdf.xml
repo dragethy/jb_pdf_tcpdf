@@ -13,7 +13,7 @@
         <type>text</type>
         <description>Name of the PDF including containing folders i.e. some/folder/$user->name/$uri->get('id')/#some_field#/some.pdf</description>
         <published />
-        <label>Name of PDF</label>
+        <label>NAME_PDF</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />

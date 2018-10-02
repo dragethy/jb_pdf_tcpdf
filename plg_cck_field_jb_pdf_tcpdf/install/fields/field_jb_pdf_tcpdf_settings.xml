@@ -13,7 +13,7 @@
         <type>textarea</type>
         <description>Settings for TCPDF</description>
         <published />
-        <label>Settings</label>
+        <label>SETTINGS_TCPDF</label>
         <selectlabel> </selectlabel>
         <display>3</display>
         <required />

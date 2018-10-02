@@ -41,13 +41,9 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         * @example: you could then have another pdf plugin with create_field_trigger set as "portrait".
         *
         */
-        echo '<li><label>Create PDF</label>'
-         .   JCckDev::renderForm( 'jb_pdf_tcpdf_create_select', @$options2['create_select'], $config )
+        echo JCckDev::renderForm( 'jb_pdf_tcpdf_create_select', @$options2['create_select'], $config )
          .   JCckDev::renderForm( 'jb_pdf_tcpdf_create_field', @$options2['create_field'], $config )
-         .   JCckDev::renderForm( 'jb_pdf_tcpdf_create_field_trigger', @$options2['create_field_trigger'], $config )
-         .   '</li>';
-
-
+         .   JCckDev::renderForm( 'jb_pdf_tcpdf_create_field_trigger', @$options2['create_field_trigger'], $config );
 
 
 
@@ -62,10 +58,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
 
-        echo '<li><label>Location for PDF</label>'
-         .   JCckDev::renderForm( 'jb_pdf_tcpdf_name_pdf', @$options2['name_pdf'], $config )
-         .   '</li>';
-
+        echo JCckDev::renderForm( 'jb_pdf_tcpdf_name_pdf', @$options2['name_pdf'], $config );
 
 
 
@@ -86,9 +79,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
 
-        echo '<li><label>Destination for PDF</label>'
-         .   JCckDev::renderForm( 'jb_pdf_tcpdf_destination_pdf', @$options2['destination_pdf'], $config )
-         .   '</li>';
+        echo JCckDev::renderForm( 'jb_pdf_tcpdf_destination_pdf', @$options2['destination_pdf'], $config );
 
 
 
@@ -102,9 +93,7 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         * @example: /libraries/tcpdf/tcpdf.php
         *
         */
-        echo '<label>Name TCPDF</label>'
-         .   JCckDev::renderForm( 'jb_pdf_tcpdf_name_tcpdf', @$options2['name_tcpdf'], $config )
-         .   '</li>';
+        echo JCckDev::renderForm( 'jb_pdf_tcpdf_name_tcpdf', @$options2['name_tcpdf'], $config );
 
 
 
@@ -121,10 +110,10 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
 
-        echo '<label>Settings TCPDF</label>'
-         .   JCckDev::renderForm( 'jb_pdf_tcpdf_settings', @$options2['settings'], $config )
-         .   '</li>';
-
+        echo JCckDev::renderForm( 'jb_pdf_tcpdf_settings', @$options2['settings'], $config );
+        
+        
+        
 
         /*
         *
@@ -137,9 +126,10 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         * @example: output as $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING);
         *
         */
-        echo '<label>Header</label>'
-         .   JCckDev::renderForm( 'jb_pdf_tcpdf_header', @$options2['header'], $config )
-         .   '</li>';
+        echo JCckDev::renderForm( 'jb_pdf_tcpdf_header', @$options2['header'], $config );
+        
+        
+        
 
         /*
         *
@@ -149,9 +139,9 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         * @tip: Accepts [$user,$uri,$fields,#field_name#]
         *
         */
-        echo '<label>Body</label>'
-         .   JCckDev::renderForm( 'jb_pdf_tcpdf_body', @$options2['body'], $config )
-         .   '</li>';
+        echo JCckDev::renderForm( 'jb_pdf_tcpdf_body', @$options2['body'], $config );
+        
+        
 
 
         /*
@@ -163,9 +153,9 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
 
-        echo '<label>Footer</label>'
-         .   JCckDev::renderForm( 'jb_pdf_tcpdf_footer', @$options2['footer'], $config )
-         .   '</li>';
+        echo JCckDev::renderForm( 'jb_pdf_tcpdf_footer', @$options2['footer'], $config );
+        
+        
 
 
         // Add link to tutorial on forum i.e. https://www.seblod.com/community/forums/fields-plug-ins/pdf-plugin

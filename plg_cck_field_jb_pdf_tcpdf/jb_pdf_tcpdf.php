@@ -334,20 +334,20 @@
 
 
             // J(translate)
-            // WORKS ONLY IF COM_CCK is there
-            if ( $body != '' && strpos( $body, 'J(' ) !== false )
-            {
-                $matches    =   '';
-                $search     =   '#J\((.*)\)#U';
-                preg_match_all( $search, $body, $matches );
-                if ( count( $matches[1] ) )
-                {
-                    foreach ( $matches[1] as $text )
-                    {
-                        $body    =   str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $body );
-                    }
-                }
-            }
+            // NO WORK
+            // if ( $body != '' && strpos( $body, 'J(' ) !== false )
+            // {
+            //     $matches    =   '';
+            //     $search     =   '#J\((.*)\)#U';
+            //     preg_match_all( $search, $body, $matches );
+            //     if ( count( $matches[1] ) )
+            //     {
+            //         foreach ( $matches[1] as $text )
+            //         {
+            //             $body    =   str_replace( 'J('.$text.')', JText::_( 'COM_CCK_' . str_replace( ' ', '_', trim( $text ) ) ), $body );
+            //         }
+            //     }
+            // }
 
 
             // $user
@@ -365,11 +365,12 @@
                         $body   =   str_replace( $matches[0][$k], $user->$v, $body );
                     }
                 }
+
             }
 
 
             // [date(.*)]
-            // No work
+            // DOES WORK KINDA, NOT SURE HOW TO USE IT
             if ( $body != '' && strpos( $body, '[date' ) !== false )
             {
                 $matches    =   null;
@@ -384,9 +385,11 @@
                 }
             }
 
-            // $fields (to make so that any field data can be used, maybe with #fiedl_name@property# i.e. #art_title@id#)
+
+
+
             // #fieldnames#
-            // For some reason #art_title# does not work, but #art_alias# does....
+            // WORKS
             $matches    =   null;
             preg_match_all( '#\#([a-zA-Z0-9_]*)\##U', $body, $matches );
             if ( count( $matches[1] ) )
@@ -402,7 +405,10 @@
                 }
             }
 
+
+
             // {del fieldname}{/del}
+            // NOT TESTED
             if ( $body != '' && strpos( $body, '{del' ) !== false )
             {
                 $dels   =   null;
@@ -420,47 +426,59 @@
                 }
             }
 
+
+
+
             // $cck->getAttr('fieldname');
+            // WORKS
             if ( $body != '' && strpos( $body, '$cck->get' ) !== false )
             {
                 $matches    =   '';
                 $search     =   '#\$cck\->get([a-zA-Z0-9_]*)\( ?\'([a-zA-Z0-9_]*)\' ?\)(;)?#';
                 preg_match_all( $search, $body, $matches );
+
                 if ( count( $matches[1] ) )
                 {
-                    for ( $i = 0, $n = count( $matches[1] ); $i <= $n; $i++ )
+                    foreach ( $matches[1] as $k=>$v )
                     {
-                        $attr   =   strtolower( $matches[1][$i] );
-                        $match  =   $matches[2][$i];
+
+                        $attr   =   strtolower( $v );
+                        $match  =   $matches[2][$k];
+
                         if ( isset( $fields[$match]->$attr ) && trim( $fields[$match]->$attr ) != '' )
                         {
-                            $body   =   str_replace( $matches[0][$i], $fields[$match]->$attr, $body );
-                        } else {
-                            $body   =   str_replace( $matches[0][$i], '', $body );
+                            $match = $fields[$match]->$attr;
+
+                            $body  =   str_replace( $matches[0][$k], $match, $body );
                         }
+
                     }
                 }
             }
 
+
+
+
+
             // $uri;
-            // TODO REALLY CONFUSING ME, NOT WORKING
-            // if ( $body != '' && strpos( $body, '$uri->get' ) !== false ) {
-            //     $matches    =   '';
-            //     $search     =   '#\$uri\->get([a-zA-Z]*)\( ?\'?([a-zA-Z0-9_]*)\'? ?\)(;)?#';
-            //     preg_match_all( $search, $body, $matches );
-            //     if ( count( $matches[1] ) ) {
-            //         foreach ( $matches[1] as $k=>$v ) {
-            //             $variable   =   $matches[2][$k];
-            //             if ( $v == 'Current' ) {
-            //                 $request    =   ( $variable == 'true' ) ? JUri::getInstance()->toString() : JUri::current();
-            //                 $body       =   str_replace( $matches[0][$k], $request, $body );
-            //             } else {
-            //                 $request    =   'get'.$v;
-            //                 $body       =   str_replace( $matches[0][$k], $app->input->$request( $variable, '' ), $body );
-            //             }
-            //         }
-            //     }
-            // }
+            // WORKS
+            if ( $body != '' && strpos( $body, '$uri->' ) !== false )
+            {
+
+                $app        =   JFactory::getApplication();
+                $matches    =   '';
+                $search     =   '#\$uri\-> ?\'?([a-zA-Z0-9_]*)\'? ?(;)?#';
+                preg_match_all( $search, $body, $matches );
+                if ( count( $matches[1] ) )
+                {
+                    foreach ( $matches[1] as $k=>$v )
+                    {
+                        $match = $app->input->get( $v, '' );
+                        $body       =   str_replace( $matches[0][$k], $match, $body );
+
+                    }
+                }
+            }
 
 
 
@@ -472,13 +490,15 @@
 
 
             // [id][pk][sitename][siteurl]
+            // WORKS
             $body   =   str_replace( '[id]', $config['id'], $body );
             $body   =   str_replace( '[pk]', $config['pk'], $body );
             $body   =   str_replace( '[sitename]', $config2->get( 'sitename' ), $body );
             $body   =   str_replace( '[siteurl]', JUri::base(), $body );
-$message = $body;
-JFactory::getApplication()->enqueueMessage($message , '_tcpdfSetDynamicValues');
+            $message = $body;
+            JFactory::getApplication()->enqueueMessage($message , 'tcpdfSetDynamicValues');
             return $body;
+
         }
 
 
@@ -655,11 +675,8 @@ JFactory::getApplication()->enqueueMessage($message , '_tcpdfSetDynamicValues');
                         }
                         else
                         {
-
-
                             // split in to an array up until 'array(',  then split that in to the array, then continue until come across 'array(' again etc
-
-                            # code...
+                            // TODO
                             $matches['params'][$key] = self::_split($matches['params'][$key]);
                         }
                     }

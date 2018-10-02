@@ -42,8 +42,8 @@ $to_admin   =   ( is_array( @$options2['to_admin'] ) ) ? implode( ',', $options2
         *
         */
         echo '<li><label>Create PDF</label>'
-         .   JCckDev::renderForm( 'jb_pdf_tcpdf_field_create_select', @$options2['create_select'], $config )
-         .   JCckDev::renderForm( 'jb_pdf_tcpdf_field_create_field', @$options2['create_field'], $config )
+         .   JCckDev::renderForm( 'jb_pdf_tcpdf_create_select', @$options2['create_select'], $config )
+         .   JCckDev::renderForm( 'jb_pdf_tcpdf_create_field', @$options2['create_field'], $config )
          .   JCckDev::renderForm( 'jb_pdf_tcpdf_create_field_trigger', @$options2['create_field_trigger'], $config )
          .   '</li>';
 

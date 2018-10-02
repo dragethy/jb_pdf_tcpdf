@@ -150,10 +150,10 @@
             // where the tcpdf stuff is
             $name_tcpdf   =   ( isset( $options2['name_tcpdf'] ) && strlen( $options2['name_tcpdf'] ) > 0 ) ? $options2['name_tcpdf'] : JPATH_SITE.'/'.'libraries'.'/'.'TCPDF-master'.'/'.'tcpdf.php';
             // split strings by this value, might be redundant now
-            $settings   =   ( isset( $options2['settings'] ) ) ? $options2['settings'] : '';
-            $header =   ( isset( $options2['header'] ) ) ? $options2['header'] : '';
-            $body   =   ( isset( $options2['body'] ) ) ? $options2['body'] : '';
-            $footer =   ( isset( $options2['footer'] ) ) ? $options2['footer'] : '';
+            $settings = ( isset( $options2['settings'] ) ) ? $options2['settings'] : '';
+            $header = ( isset( $options2['header'] ) ) ? $options2['header'] : '';
+            $body = ( isset( $options2['body'] ) ) ? $options2['body'] : '';
+            $footer = ( isset( $options2['footer'] ) ) ? $options2['footer'] : '';
 
             $isNew      =   ( $config['pk'] ) ? 0 : 1;
 

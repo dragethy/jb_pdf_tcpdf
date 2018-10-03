@@ -543,7 +543,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
 
                 // If a)
-                if (preg_match("/^array(/",$string))
+                if (preg_match("/^array\(/",$string))
                 {
 
                     // $match[1] = content of array

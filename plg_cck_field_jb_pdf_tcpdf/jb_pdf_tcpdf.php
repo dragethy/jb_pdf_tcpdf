@@ -187,6 +187,40 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         }
 
 
+
+        // str_replace Seblod stuff
+        // $storages and $config are TODO, but first I need to provide 'enable' optiion in field settings
+
+        if ( $name_pdf )
+        {
+            $name_pdf = self::_tcpdfSetDynamicValues($name_pdf, $fields, $config );
+        }
+
+        if ( $destination_pdf )
+        {
+            $destination_pdf = self::_tcpdfSetDynamicValues($destination_pdf, $fields, $config );
+        }
+
+        if ( $settings )
+        {
+            $settings = self::_tcpdfSetDynamicValues($settings, $fields, $config );
+        }
+
+        if ( $header )
+        {
+            $header = self::_tcpdfSetDynamicValues($header, $fields, $config );
+        }
+
+        if ( $body )
+        {
+            $body = self::_tcpdfSetDynamicValues($body, $fields, $config );
+        }
+
+        if ( $footer )
+        {
+            $footer = self::_tcpdfSetDynamicValues($footer, $fields, $config );
+        }
+
         // Validate
         parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
 
@@ -247,39 +281,6 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
         $isNew      =   $process['isNew'];
 
-        // str_replace Seblod stuff
-        // $storages and $config are TODO, but first I need to provide 'enable' optiion in field settings
-
-        if ( $process['name_pdf'] )
-        {
-            $process['name_pdf'] = self::_tcpdfSetDynamicValues($process['name_pdf'], $fields, $storages, $config );
-        }
-
-        if ( $process['destination_pdf'] )
-        {
-            $process['destination_pdf'] = self::_tcpdfSetDynamicValues($process['destination_pdf'], $fields, $storages, $config );
-        }
-
-        if ( $process['settings'] )
-        {
-            $process['settings'] = self::_tcpdfSetDynamicValues($process['settings'], $fields, $storages, $config );
-        }
-
-        if ( $process['header'] )
-        {
-            $process['header'] = self::_tcpdfSetDynamicValues($process['header'], $fields, $storages, $config );
-        }
-
-        if ( $process['body'] )
-        {
-            $process['body'] = self::_tcpdfSetDynamicValues($process['body'], $fields, $storages, $config );
-        }
-
-        if ( $process['footer'] )
-        {
-            $process['footer'] = self::_tcpdfSetDynamicValues($process['footer'], $fields, $storages, $config );
-        }
-
         // create pdf
         self::_tcpdfHelper($process);
 
@@ -324,7 +325,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     * @return = $data with updated values
     *
     */
-    protected static function _tcpdfSetDynamicValues( &$body, &$fields, &$storages, &$config = array() )
+    protected static function _tcpdfSetDynamicValues( &$body, &$fields, &$config = array() )
     {
 
         // $config2

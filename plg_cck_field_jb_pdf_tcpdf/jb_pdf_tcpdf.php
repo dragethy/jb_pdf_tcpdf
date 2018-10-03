@@ -517,7 +517,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     * @tip: get string and convert to array
     * @tip: there might be nested arrays
     *
-    * @return: $match[0]string,[1]1st (), [2]2nd ()
+    * @return: array();
     *
     */
     protected static function _tcpdfGetParams($string)
@@ -575,18 +575,36 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                     $match[1] = $data;
 
                 }
-                else
+                elseif(strpos($string, ',') !== false)
                 {
 
                     // if does not start with array, split at first ",".
-                    preg_match('/(.*)[\s]?,[\s]?(.*)/', $string, $match);
+                    $exploded = explode(',', $string, 2);
+
+                    $match[1] = $exploded[0];
+                    $match[2] = $exploded[1];
+
+                }
+                else
+                {
+
+                    // are we all done, no commas left?
+                    $match[1] = $string;
+                    $match[2] = '';
+
+                    // if so, end loop
+                    $i = $count;
 
                 }
 
+
+
                 // assign value to array
                 $array[] = $match[1];
-                // reset string in loop as this substring
+
+                // reset string in loop as the remaining substring
                 $string = $match[2];
+
             }
 
         }
@@ -598,6 +616,27 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
         }
 
+        // clean array
+        foreach ($array as $key => $value)
+        {
+            if (is_array($value))
+            {
+                foreach ($value as $key2 => $value2)
+                {
+
+                    // remove unwanted start and end characters
+                    $array[$key][$key2] = trim($value2, "\'\"\t\n\s");
+
+                }
+            }
+            else
+            {
+
+                // remove unwanted start and end characters
+                $array[$key] = trim($value, '\'\"\t\n\s');
+
+            }
+        }
 
         // all done
         return $array;
@@ -638,12 +677,12 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 preg_match_all('/<tcpdf[\s]?method="(.*?)"[\s]?params="(.*?)"[\s]?\/>/', $data, $matches);
 
                 // get params as array
-                $params = self::_tcpdfGetParams($matches[2]);
+                $matches[2] = self::_tcpdfGetParams($matches[2]);
 
                 if ($serialized === 1)
                 {
 
-                    $matches[2] = $pdf->serializeTCPDFtagParameters($params);
+                    $matches[2] = $pdf->serializeTCPDFtagParameters($matches[2]);
 
                 }
 
@@ -705,7 +744,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                     // search for original string in $data and replace with '<tcpdf method=".$method." params=".$params." />';
                     // reconstruct string with serialized params
                     $search = $matches[0][$key];
-                    $replace = '<tcpdf method="'.$matches[1][$key].'" params="'.$matches['params'][$key].'" />';
+                    $replace = '<tcpdf method="'.$matches[1][$key].'" params="'.$matches[2][$key].'" />';
                     $subject = $data;
 
                     $data = str_replace($search, $replace, $subject);

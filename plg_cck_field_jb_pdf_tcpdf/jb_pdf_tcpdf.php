@@ -544,16 +544,16 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
                 // If a)
                 if (substr($string, 0, 6) === 'array(')
-
                 {
 
                     // $match[1] = content of array
                     // $match[2] = remainder of string to iterate through
-                    preg_match("/array\(([a-zA-Z0-9])\)[,]?([a-zA-Z0-9])/", $string, $match);
+                    preg_match("/array\((.*)\)[,]?(.*)/", $string, $match);
 
                     // convert $match[1] in an array()
                     $match[1] = explode(",", $match[1]);
 
+                    // is $match[1][n] meant to be assoc array i.e. cat => 'dog'?
                     // is $match[1][n] meant to be assoc array i.e. cat => 'dog'?
                     foreach ($match[1] as $key => $value)
                     {
@@ -561,15 +561,14 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                         if (strpos( $value, '=>' ))
                         {
 
-                            preg_match('/([a-zA-Z0-9])[\s]*=>[\s]*([a-zA-Z0-9])[\s]*[,]?/', $value, $matchAssoc)
-                            // reassign key and value as assoc
-                            $key = $matchAssoc[1];
+                            $exploded = explode('=>', $value);
 
-                            $value = $matchAssoc[2];
-
+                            $key = $exploded[0];
+                            $value = $exploded[1];
                         }
 
-                        $data[$key] = $value;
+                            $data[$key] = $value;
+
                     }
 
                     // reassign $match[1] with array

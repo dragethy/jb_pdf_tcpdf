@@ -1,7 +1,7 @@
 
 
 $message = ' ';
-JFactory::getApplication()->enqueueMessage($message , 'error');
+JFactory::getApplication()->enqueueMessage($message , 'tcpdf');
 
 
 

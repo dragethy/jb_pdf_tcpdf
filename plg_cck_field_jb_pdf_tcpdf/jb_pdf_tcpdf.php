@@ -155,6 +155,8 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         $body = ( isset( $options2['body'] ) ) ? $options2['body'] : '';
         $footer = ( isset( $options2['footer'] ) ) ? $options2['footer'] : '';
 
+        // value to store in $db
+        $value = $body;
         $isNew      =   ( $config['pk'] ) ? 0 : 1;
 
         $valid      =   0;
@@ -187,39 +189,6 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         }
 
 
-
-        // str_replace Seblod stuff
-        // $storages and $config are TODO, but first I need to provide 'enable' optiion in field settings
-
-        if ( $name_pdf )
-        {
-            $name_pdf = self::_tcpdfSetDynamicValues($name_pdf, $fields, $config );
-        }
-
-        if ( $destination_pdf )
-        {
-            $destination_pdf = self::_tcpdfSetDynamicValues($destination_pdf, $fields, $config );
-        }
-
-        if ( $settings )
-        {
-            $settings = self::_tcpdfSetDynamicValues($settings, $fields, $config );
-        }
-
-        if ( $header )
-        {
-            $header = self::_tcpdfSetDynamicValues($header, $fields, $config );
-        }
-
-        if ( $body )
-        {
-            $body = self::_tcpdfSetDynamicValues($body, $fields, $config );
-        }
-
-        if ( $footer )
-        {
-            $footer = self::_tcpdfSetDynamicValues($footer, $fields, $config );
-        }
 
         // Validate
         parent::g_onCCK_FieldPrepareStore_Validation( $field, $name, $value, $config );
@@ -281,6 +250,45 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
         $isNew      =   $process['isNew'];
 
+
+        // str_replace Seblod stuff
+        // $storages and $config are TODO, but first I need to provide 'enable' optiion in field settings
+
+        if ( $name_pdf )
+        {
+            $name_pdf = self::_tcpdfSetDynamicValues($name_pdf, $fields, $config );
+        }
+
+        if ( $destination_pdf )
+        {
+            $destination_pdf = self::_tcpdfSetDynamicValues($destination_pdf, $fields, $config );
+        }
+
+        if ( $settings )
+        {
+            $settings = self::_tcpdfSetDynamicValues($settings, $fields, $config );
+        }
+
+        if ( $header )
+        {
+            $header = self::_tcpdfSetDynamicValues($header, $fields, $config );
+        }
+
+        if ( $body )
+        {
+            $body = self::_tcpdfSetDynamicValues($body, $fields, $config );
+        }
+
+        if ( $footer )
+        {
+            $footer = self::_tcpdfSetDynamicValues($footer, $fields, $config );
+        }
+
+
+        // TODO: Might be good to update content in DB with updates values
+        // $content = JCckContent::getInstance($config[pk]);
+        // $content->set('field', $body)
+        // ->store();
         // create pdf
         self::_tcpdfHelper($process);
 
@@ -854,6 +862,8 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
     protected static function _tcpdfHelper( &$data )
     {
+
+
 
         //  require_once('tcpdf_include.php');
         require_once($data['name_tcpdf']);

@@ -632,7 +632,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 {
 
                     // remove unwanted start and end characters
-                    $array[$key][$key2] = trim($value2, "'\"\t\n\s");
+                    $array[$key][$key2] = trim($value2, "\"\t\n\s");
 
                 }
             }
@@ -777,7 +777,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
 
     // _tcpdfCallMethod
-    protected static function _tcpdfSetPdfMethodParams( &$pdf,&$method, &$params = '' )
+    protected static function _tcpdfSetPdfMethodParams( &$pdf,&$method, &$params = array() )
     {
 
 
@@ -903,18 +903,16 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
         if ( $data['body'] )
         {
-$message = $data['body'];
-JFactory::getApplication()->enqueueMessage($message , '$output1');
+
             $array = self::_tcpdfGetMethodParams($pdf, $data['body'], 1);
             $data['body'] = self::_tcpdfSetMethodParams($pdf, $array, 1, $data['body']);
 
         }
 
         // create the title for pdf (used in 'save as' option on computer.)
-        $output = $pdf->Output($data['name_pdf'], $data['destination_pdf']);
 
-$message = $data['body'];
-JFactory::getApplication()->enqueueMessage($message , '$output');
+        $pdf->Output($data['name_pdf'], $data['destination_pdf']);
+
     }
 } // END OF PLUGIN
 

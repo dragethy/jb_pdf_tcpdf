@@ -688,15 +688,18 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 foreach ($matches[2] as $key => $value)
                 {
 
+                    // return an array of params
                     $matches[2][$key] = self::_tcpdfGetParams($value);
+
+                    // serialize the array of params
+                    if ($serialized === 1)
+                    {
+
+                        $matches[2][$key] = $pdf->serializeTCPDFtagParameters($matches[2]);
+
+                    }
                 }
 
-                if ($serialized === 1)
-                {
-
-                    $matches[2][$key] = $pdf->serializeTCPDFtagParameters($matches[2]);
-
-                }
 
 
             }
@@ -880,7 +883,6 @@ JFactory::getApplication()->enqueueMessage($message , '$output');
         if ( $data['header'] )
         {
             $array = self::_tcpdfGetMethodParams($pdf, $data['header']);
-
             $data['header'] = self::_tcpdfSetMethodParams($pdf,$array);
 
         }

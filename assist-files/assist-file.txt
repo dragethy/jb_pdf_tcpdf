@@ -3,7 +3,14 @@
 $message = ' ';
 JFactory::getApplication()->enqueueMessage($message , 'tcpdf');
 
+        foreach($array as $k => $v)
+        {
 
+            $message .= '$k = '.$k.', $v = '.$v.'<br>';
+
+        }
+
+        JFactory::getApplication()->enqueueMessage($message , '_tcpdfGetMethodParams');
 
 
 <tcpdf method="addPageBreak" params="true,10" />

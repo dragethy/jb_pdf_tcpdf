@@ -619,7 +619,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         {
 
             // if no commas then nothing to do except return as only one value
-            $array = $string;
+            $array[] = $string;
 
         }
 
@@ -644,6 +644,15 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
             }
         }
+
+        foreach($array as $k => $v)
+        {
+
+            $message .= '$k = '.$k.', $v = '.$v.'<br>';
+
+        }
+
+        JFactory::getApplication()->enqueueMessage($message , '_tcpdfGetMethodParams');
 
         // all done
         return $array;
@@ -677,16 +686,19 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         if ( $data )
         {
 
-            if ( $data != '' && strpos( $data, '<tcpdf' ) !== false )
+            if ( $data != '' && strpos( $data, 'tcpdf' ) !== false )
             {
 
                 // make an array of  [0]strings [1]method [2]params
                 preg_match_all('/tcpdf[\s]?method="[\s]?([^\"]*?)[\s]?"[\s]?params="[\s]?([^\"]*?)[\s]?"/', $data, $matches);
 
-       $message = $data;
-JFactory::getApplication()->enqueueMessage($message , '_tcpdfGetMethodParams');
-                // get params as array
-                $matches[2] = self::_tcpdfGetParams($matches[2]);
+                // pass each params as string of arrays, return params as array of arrays
+                foreach ($matches[2] as $key => $value)
+                {
+
+                    $matches[2][$key] = self::_tcpdfGetParams($value);
+                }
+
                 if ($serialized === 1)
                 {
 
@@ -719,7 +731,7 @@ JFactory::getApplication()->enqueueMessage($message , '_tcpdfGetMethodParams');
     * @tip: if serialized === 1 then it is going to be a string replace in html
     * @tip: array() is data from _tcpdfGetMethodParams
     *
-    * @tip: Some methods may not require params : <tcpdf method="AddPage" />
+    * @tip: Some methods may not require params : tcpdf method="AddPage" />
     *
     *
     */
@@ -749,7 +761,7 @@ JFactory::getApplication()->enqueueMessage($message , '_tcpdfGetMethodParams');
                 elseif ($serialized === 1)
                 {
 
-                    // search for original string in $data and replace with '<tcpdf method=".$method." params=".$params." />';
+                    // search for original string in $data and replace with 'tcpdf method=".$method." params=".$params." />';
                     // reconstruct string with serialized params
                     $search = $matches[0][$key];
                     $replace = 'tcpdf method="'.$matches[1][$key].'" params="'.$matches[2][$key].'"';
@@ -871,18 +883,13 @@ JFactory::getApplication()->enqueueMessage($message , '_tcpdfGetMethodParams');
         // initiate
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-        // get method and params from <tcpdf> tag and apply as $pdf->method($params) or serialized
+        // get method and params from tcpdf> tag and apply as $pdf->method($params) or serialized
         if ( $data['header'] )
         {
-            // $array = self::_tcpdfGetMethodParams($pdf, $data['header']);
+            $array = self::_tcpdfGetMethodParams($pdf, $data['header']);
 
             // $data['header'] = self::_tcpdfSetMethodParams($pdf,$array);
-            foreach ($data as $key => $value) {
-                # code...
-                $message .= $key.' = '.$value.' ,<br>';
-            }
-// $message .= $data['header'][0];
-                JFactory::getApplication()->enqueueMessage($message , 'header');
+
         }
 
 

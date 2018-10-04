@@ -149,10 +149,10 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         // where the tcpdf stuff is
         $name_tcpdf   =   ( isset( $options2['name_tcpdf'] ) && strlen( $options2['name_tcpdf'] ) > 0 ) ? $options2['name_tcpdf'] : JPATH_SITE.'/'.'libraries'.'/'.'TCPDF-master'.'/'.'tcpdf.php';
         // split strings by this value, might be redundant now
-        $settings = ( isset( $options2['settings'] ) ) ? $options2['settings'] : '';
-        $header = ( isset( $options2['header'] ) ) ? $options2['header'] : '';
-        $body = ( isset( $options2['body'] ) ) ? $options2['body'] : '';
-        $footer = ( isset( $options2['footer'] ) ) ? $options2['footer'] : '';
+        $settings = ( isset( $options2['settings'] ) && strlen( $options2['settings'] ) > 0 ) ? $options2['settings'] : '';
+        $header = ( isset( $options2['header'] ) && strlen( $options2['header'] ) > 0 ) ? $options2['header'] : '';
+        $body = ( isset( $options2['body'] ) && strlen( $options2['body'] ) > 0 ) ? $options2['body'] : '';
+        $footer = ( isset( $options2['footer'] ) && strlen( $options2['footer'] ) > 0 ) ? $options2['footer'] : '';
 
         // value to store in $db
         $value = $body;

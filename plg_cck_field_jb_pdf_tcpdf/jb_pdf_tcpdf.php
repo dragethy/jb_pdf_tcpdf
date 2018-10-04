@@ -255,32 +255,32 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
         if ( $process['name_pdf'] )
         {
-            $process['name_pdf = self::_tcpdfSetDynamicValues($process['name_pdf, $fields, $config );
+            $process['name_pdf'] = self::_tcpdfSetDynamicValues($process['name_pdf'], $fields, $config );
         }
 
         if ( $process['destination_pdf'] )
         {
-            $process['destination_pdf = self::_tcpdfSetDynamicValues($process['destination_pdf, $fields, $config );
+            $process['destination_pdf'] = self::_tcpdfSetDynamicValues($process['destination_pdf'], $fields, $config );
         }
 
         if ( $process['settings'] )
         {
-            $process['settings = self::_tcpdfSetDynamicValues($process['settings, $fields, $config );
+            $process['settings'] = self::_tcpdfSetDynamicValues($process['settings'], $fields, $config );
         }
 
         if ( $process['header'] )
         {
-            $process['header = self::_tcpdfSetDynamicValues($process['header, $fields, $config );
+            $process['header'] = self::_tcpdfSetDynamicValues($process['header'], $fields, $config );
         }
 
         if ( $process['body'] )
         {
-            $process['body = self::_tcpdfSetDynamicValues($process['body, $fields, $config );
+            $process['body'] = self::_tcpdfSetDynamicValues($process['body'], $fields, $config );
         }
 
         if ( $process['footer'] )
         {
-            $process['footer = self::_tcpdfSetDynamicValues($process['footer, $fields, $config );
+            $process['footer'] = self::_tcpdfSetDynamicValues($process['footer'], $fields, $config );
         }
 
 

@@ -1,3 +1,11 @@
+
+
+$message = ' ';
+JFactory::getApplication()->enqueueMessage($message , 'error');
+
+
+
+
 ‹tcpdf method=“addPageBreak” params=“true,10” ⁄›
 
 

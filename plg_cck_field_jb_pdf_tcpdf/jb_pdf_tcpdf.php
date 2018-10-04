@@ -645,14 +645,6 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             }
         }
 
-        foreach($array as $k => $v)
-        {
-
-            $message .= '$k = '.$k.', $v = '.$v.'<br>';
-
-        }
-
-        JFactory::getApplication()->enqueueMessage($message , '_tcpdfGetMethodParams');
 
         // all done
         return $array;

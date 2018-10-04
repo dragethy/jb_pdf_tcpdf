@@ -17,10 +17,10 @@ $message .= '$k = '.$k.', $v = '.$v.'<br>';
 JFactory::getApplication()->enqueueMessage($message , '_tcpdfSetPdfMethodParams');
 
 
-<tcpdf method="addPageBreak" params="true,10" />
+tcpdf method="addPage" params="true,10"
 
 
-<tcpdf method="SetHeaderData" params="PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING" />
+tcpdf method="SetHeaderData" params="PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, 'My Title', PDF_HEADER_STRING"
 
 
 
@@ -29,14 +29,14 @@ JFactory::getApplication()->enqueueMessage($message , '_tcpdfSetPdfMethodParams'
 <li>Cck: $cck->getText('choose_file_types');</li>
 <li>Uri: $uri->id</li>
 <li>Date: date(now)</li>
-<li>Tag: <tcpdf  method="SetHeaderData" params="PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH,My Pdf Title, PDF_HEADER_STRING" /></li>
+<li>Tag: tcpdf  method="SetHeaderData" params="PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH,My Pdf Title, PDF_HEADER_STRING"</li>
 <li></li>
 <li>
 <li>
 <li>
 </ul>
 
-<tcpdf method="SetFooterMargin" params="PDF_MARGIN_FOOTER" />
+tcpdf method="SetFooterMargin" params="PDF_MARGIN_FOOTER"
 
 
 

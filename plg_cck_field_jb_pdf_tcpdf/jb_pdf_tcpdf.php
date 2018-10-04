@@ -253,34 +253,34 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         // str_replace Seblod stuff
         // $storages and $config are TODO, but first I need to provide 'enable' optiion in field settings
 
-        if ( $name_pdf )
+        if ( $process['name_pdf'] )
         {
-            $name_pdf = self::_tcpdfSetDynamicValues($name_pdf, $fields, $config );
+            $process['name_pdf = self::_tcpdfSetDynamicValues($process['name_pdf, $fields, $config );
         }
 
-        if ( $destination_pdf )
+        if ( $process['destination_pdf'] )
         {
-            $destination_pdf = self::_tcpdfSetDynamicValues($destination_pdf, $fields, $config );
+            $process['destination_pdf = self::_tcpdfSetDynamicValues($process['destination_pdf, $fields, $config );
         }
 
-        if ( $settings )
+        if ( $process['settings'] )
         {
-            $settings = self::_tcpdfSetDynamicValues($settings, $fields, $config );
+            $process['settings = self::_tcpdfSetDynamicValues($process['settings, $fields, $config );
         }
 
-        if ( $header )
+        if ( $process['header'] )
         {
-            $header = self::_tcpdfSetDynamicValues($header, $fields, $config );
+            $process['header = self::_tcpdfSetDynamicValues($process['header, $fields, $config );
         }
 
-        if ( $body )
+        if ( $process['body'] )
         {
-            $body = self::_tcpdfSetDynamicValues($body, $fields, $config );
+            $process['body = self::_tcpdfSetDynamicValues($process['body, $fields, $config );
         }
 
-        if ( $footer )
+        if ( $process['footer'] )
         {
-            $footer = self::_tcpdfSetDynamicValues($footer, $fields, $config );
+            $process['footer = self::_tcpdfSetDynamicValues($process['footer, $fields, $config );
         }
 
 
@@ -884,39 +884,37 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
         }
 
+        if ( $data['footer'] )
+        {
 
-//         if ( $data['footer'] )
-//         {
+            $array = self::_tcpdfGetMethodParams($pdf, $data['footer']);
+            $data['footer'] = self::_tcpdfSetMethodParams($pdf,$array);
 
-//             $array = self::_tcpdfGetMethodParams($pdf, $data['footer']);
-//             $data['footer'] = self::_tcpdfSetMethodParams($pdf,$array);
-
-//         }
-
-
-//         if ( $data['settings'] )
-//         {
-
-//             $array = self::_tcpdfGetMethodParams($pdf, $data['settings']);
-//             $data['settings'] = self::_tcpdfSetMethodParams($pdf,$array);
-
-//         }
-
-//         if ( $data['body'] )
-//         {
-
-//             $array = self::_tcpdfGetMethodParams($pdf, $data['body'], 1);
-//             $data['body'] = self::_tcpdfSetMethodParams($pdf, $array, 1, $data['body']);
-
-//         }
+        }
 
 
-$message = 'hi';
-JFactory::getApplication()->enqueueMessage($message , '_tcpdfHelper');
+        if ( $data['settings'] )
+        {
 
-        // // create the title for pdf (used in 'save as' option on computer.)
-        // $output = $pdf->Output($data['name_pdf'], $data['destination_pdf']);
+            $array = self::_tcpdfGetMethodParams($pdf, $data['settings']);
+            $data['settings'] = self::_tcpdfSetMethodParams($pdf,$array);
 
+        }
+
+        if ( $data['body'] )
+        {
+$message = $data['body'];
+JFactory::getApplication()->enqueueMessage($message , '$output1');
+            $array = self::_tcpdfGetMethodParams($pdf, $data['body'], 1);
+            $data['body'] = self::_tcpdfSetMethodParams($pdf, $array, 1, $data['body']);
+
+        }
+
+        // create the title for pdf (used in 'save as' option on computer.)
+        $output = $pdf->Output($data['name_pdf'], $data['destination_pdf']);
+
+$message = $data['body'];
+JFactory::getApplication()->enqueueMessage($message , '$output');
     }
 } // END OF PLUGIN
 

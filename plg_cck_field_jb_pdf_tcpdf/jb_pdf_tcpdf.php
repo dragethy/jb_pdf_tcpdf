@@ -135,7 +135,6 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
         $options2   =   JCckDev::fromJSON( $field->options2 );
 
-
         // based on email 'send'
         // first, is it Never=0||Add=1||Edit=2||Always=3
         $create_select  =   ( isset( $options2['create_select'] ) && $field->state != 'disabled' ) ? $options2['create_select'] : 0;
@@ -633,7 +632,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 {
 
                     // remove unwanted start and end characters
-                    $array[$key][$key2] = trim($value2, "\'\"\t\n\s");
+                    $array[$key][$key2] = trim($value2, "'\"\t\n\s");
 
                 }
             }
@@ -641,7 +640,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             {
 
                 // remove unwanted start and end characters
-                $array[$key] = trim($value, '\'\"\t\n\s');
+                $array[$key] = trim($value, "'\"\t\n\s");
 
             }
         }
@@ -682,11 +681,12 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             {
 
                 // make an array of  [0]strings [1]method [2]params
-                preg_match_all('/<tcpdf[\s]?method="(.*?)"[\s]?params="(.*?)"[\s]?\/>/', $data, $matches);
+                preg_match_all('/tcpdf[\s]?method="[\s]?([^\"]*?)[\s]?"[\s]?params="[\s]?([^\"]*?)[\s]?"/', $data, $matches);
 
+       $message = $data;
+JFactory::getApplication()->enqueueMessage($message , '_tcpdfGetMethodParams');
                 // get params as array
                 $matches[2] = self::_tcpdfGetParams($matches[2]);
-
                 if ($serialized === 1)
                 {
 
@@ -752,7 +752,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                     // search for original string in $data and replace with '<tcpdf method=".$method." params=".$params." />';
                     // reconstruct string with serialized params
                     $search = $matches[0][$key];
-                    $replace = '<tcpdf method="'.$matches[1][$key].'" params="'.$matches[2][$key].'" />';
+                    $replace = 'tcpdf method="'.$matches[1][$key].'" params="'.$matches[2][$key].'"';
                     $subject = $data;
 
                     $data = str_replace($search, $replace, $subject);
@@ -874,40 +874,46 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         // get method and params from <tcpdf> tag and apply as $pdf->method($params) or serialized
         if ( $data['header'] )
         {
+            // $array = self::_tcpdfGetMethodParams($pdf, $data['header']);
 
-            $array = self::_tcpdfGetMethodParams($pdf, $data['header']);
-            $data['header'] = self::_tcpdfSetMethodParams($pdf,$array);
-
+            // $data['header'] = self::_tcpdfSetMethodParams($pdf,$array);
+            foreach ($data as $key => $value) {
+                # code...
+                $message .= $key.' = '.$value.' ,<br>';
+            }
+// $message .= $data['header'][0];
+                JFactory::getApplication()->enqueueMessage($message , 'header');
         }
 
 
-        if ( $data['footer'] )
-        {
+//         if ( $data['footer'] )
+//         {
 
-            $array = self::_tcpdfGetMethodParams($pdf, $data['footer']);
-            $data['footer'] = self::_tcpdfSetMethodParams($pdf,$array);
+//             $array = self::_tcpdfGetMethodParams($pdf, $data['footer']);
+//             $data['footer'] = self::_tcpdfSetMethodParams($pdf,$array);
 
-        }
-
-
-        if ( $data['settings'] )
-        {
-
-            $array = self::_tcpdfGetMethodParams($pdf, $data['settings']);
-            $data['settings'] = self::_tcpdfSetMethodParams($pdf,$array);
-
-        }
-
-        if ( $data['body'] )
-        {
-
-            $array = self::_tcpdfGetMethodParams($pdf, $data['body'], 1);
-            $data['body'] = self::_tcpdfSetMethodParams($pdf, $array, 1, $data['body']);
-
-        }
+//         }
 
 
+//         if ( $data['settings'] )
+//         {
 
+//             $array = self::_tcpdfGetMethodParams($pdf, $data['settings']);
+//             $data['settings'] = self::_tcpdfSetMethodParams($pdf,$array);
+
+//         }
+
+//         if ( $data['body'] )
+//         {
+
+//             $array = self::_tcpdfGetMethodParams($pdf, $data['body'], 1);
+//             $data['body'] = self::_tcpdfSetMethodParams($pdf, $array, 1, $data['body']);
+
+//         }
+
+
+$message = 'hi';
+JFactory::getApplication()->enqueueMessage($message , '_tcpdfHelper');
 
         // // create the title for pdf (used in 'save as' option on computer.)
         $output = $pdf->Output($data['name_pdf'], $data['destination_pdf']);

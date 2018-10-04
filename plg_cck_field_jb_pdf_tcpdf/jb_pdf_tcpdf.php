@@ -703,6 +703,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
         }
 
+
         return $matches;
 
     }
@@ -764,7 +765,6 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                     $pdf->writeHTML($data, true, 0, true, 0);
 
                 }
-
 
             }
 
@@ -849,7 +849,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 break;
 
             default:
-                $pdf->$method($param[0]);
+                $pdf->$method();
                 break;
         }
 
@@ -880,7 +880,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         {
             $array = self::_tcpdfGetMethodParams($pdf, $data['header']);
 
-            // $data['header'] = self::_tcpdfSetMethodParams($pdf,$array);
+            $data['header'] = self::_tcpdfSetMethodParams($pdf,$array);
 
         }
 
@@ -915,7 +915,7 @@ $message = 'hi';
 JFactory::getApplication()->enqueueMessage($message , '_tcpdfHelper');
 
         // // create the title for pdf (used in 'save as' option on computer.)
-        $output = $pdf->Output($data['name_pdf'], $data['destination_pdf']);
+        // $output = $pdf->Output($data['name_pdf'], $data['destination_pdf']);
 
     }
 } // END OF PLUGIN

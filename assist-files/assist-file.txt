@@ -3,14 +3,18 @@
 $message = ' ';
 JFactory::getApplication()->enqueueMessage($message , 'tcpdf');
 
-        foreach($array as $k => $v)
-        {
+foreach($params as $k => $v)
+{
+$message .= '$k = '.$k.', $v = '.$v.'<br>';
+// foreach($v as $k2 => $v2)
+// {
 
-            $message .= '$k = '.$k.', $v = '.$v.'<br>';
+// $message .= '$k = '.$k2.', $v = '.$v2.'<br>';
 
-        }
+// }
+}
 
-        JFactory::getApplication()->enqueueMessage($message , '_tcpdfGetMethodParams');
+JFactory::getApplication()->enqueueMessage($message , '_tcpdfSetPdfMethodParams');
 
 
 <tcpdf method="addPageBreak" params="true,10" />

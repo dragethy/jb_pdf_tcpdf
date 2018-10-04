@@ -694,7 +694,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 if ($serialized === 1)
                 {
 
-                    $matches[2] = $pdf->serializeTCPDFtagParameters($matches[2]);
+                    $matches[2][$key] = $pdf->serializeTCPDFtagParameters($matches[2]);
 
                 }
 
@@ -761,7 +761,8 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                     $subject = $data;
 
                     $data = str_replace($search, $replace, $subject);
-
+$message = $serialized;
+JFactory::getApplication()->enqueueMessage($message , '$output');
                     $pdf->writeHTML($data, true, 0, true, 0);
 
                 }
@@ -875,7 +876,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         // initiate
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-        // get method and params from tcpdf> tag and apply as $pdf->method($params) or serialized
+        // get method and params from tcpdf method="" params="" and apply as $pdf->method($params) or serialize data and str_replace it
         if ( $data['header'] )
         {
             $array = self::_tcpdfGetMethodParams($pdf, $data['header']);

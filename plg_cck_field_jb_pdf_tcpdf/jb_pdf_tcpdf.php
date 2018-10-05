@@ -720,7 +720,6 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                         // "array" or "arr"
                         // "object" or "obj"
                         // "null"
-                        // "const" or "constant"
                         switch ($matches[3][$key][$key2])
                         {
                             case ("boolean" || "bool"):
@@ -733,27 +732,27 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                                 $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "integer");
                                 break;
 
-                            case ("float" || "float"):
+                            case ("float" || "double"):
 
                                 $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "float");
                                 break;
 
-                            case ("string" || "string"):
+                            case ("string" || "str"):
 
                                 $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "string");
                                 break;
 
-                            case ("array" || "array"):
+                            case ("array" || "arr"):
 
                                 $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "array");
                                 break;
 
-                            case ("object" || "object"):
+                            case ("object" || "obj"):
 
                                 $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "object");
                                 break;
 
-                            case ("null" || "null"):
+                            case ("null"):
 
                                 $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "null");
                                 break;

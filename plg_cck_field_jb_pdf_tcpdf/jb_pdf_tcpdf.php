@@ -695,74 +695,81 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
                 }
 
+                // TODO: Need to
+                // a) decide if actually necessary
+                // b) if necessary, iterate therough nested arrays
+                // c) see where this code sucks
+                // // get the types as an array as will apply to params
+                // foreach ($matches[3] as $key => $value)
+                // {
+                //     // return an array of types rather than a string of types
+                //     $matches[3][$key] = explode(',', $value);
 
-                // get the types as an array as will apply to params
-                foreach ($matches[3] as $key => $value)
-                {
-                    // return an array of types rather than a string of types
-                    $matches[3][$key] = explode(',', $value);
-                }
+                // }
 
-                // apply the types for each array pf params
-                foreach ($matches[2] as $key => $value)
-                {
+                // // apply the types for each array pf params
+                // foreach ($matches[2] as $key => $value)
+                // {
 
-                    // for each item in array of params parameters
-                    foreach ($value as $key2 => $value2)
-                    {
+                //     // for each item in array of params parameters
+                //     foreach ($value as $key2 => $value2)
+                //     {
 
 
-                        // set the params as appropriate types i.e
-                        // "boolean" or "bool"
-                        // "integer" or "int"
-                        // "float" or "double"
-                        // "string" or "str"
-                        // "array" or "arr"
-                        // "object" or "obj"
-                        // "null"
-                        switch ($matches[3][$key][$key2])
-                        {
-                            case ("boolean" || "bool"):
+                //         // set the params as appropriate types i.e
+                //         // "boolean" or "bool"
+                //         // "integer" or "int"
+                //         // "float" or "double"
+                //         // "string" or "str"
+                //         // "array" or "arr"
+                //         // "object" or "obj"
+                //         // "null"
+                //         switch ($matches[3][$key][$key2])
+                //         {
+                //             case ("boolean" || "bool"):
 
-                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "boolean");
-                                break;
+                //                 settype($matches[2][$key][$key2], "boolean");
+                //                 break;
 
-                            case ("integer" || "int"):
+                //             case ("integer" || "int"):
 
-                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "integer");
-                                break;
+                //                 settype($matches[2][$key][$key2], "integer");
+                //                 break;
 
-                            case ("float" || "double"):
+                //             case ("float" || "double"):
 
-                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "float");
-                                break;
+                //                 settype($matches[2][$key][$key2], "float");
+                //                 break;
 
-                            case ("string" || "str"):
+                //             case ("string" || "str"):
 
-                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "string");
-                                break;
+                //                 settype($matches[2][$key][$key2], "string");
+                //                 break;
 
-                            case ("array" || "arr"):
+                //             case ("array" || "arr"):
 
-                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "array");
-                                break;
+                //                 settype($matches[2][$key][$key2], "array");
+                //                 break;
 
-                            case ("object" || "obj"):
+                //             case ("object" || "obj"):
 
-                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "object");
-                                break;
+                //                 settype($matches[2][$key][$key2], "object");
+                //                 break;
 
-                            case ("null"):
+                //             case ("null"):
 
-                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "null");
-                                break;
+                //                 settype($matches[2][$key][$key2], "null");
+                //                 break;
 
-                            default:
+                //             default:
 
-                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "string");
-                                break;
-                        }
-                }
+                //                 settype($matches[2][$key][$key2], "string");
+                //                 break;
+                //         }
+
+                //     }
+
+                // }
 
 
                 // serialize the array of params
@@ -843,7 +850,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
                     $data = str_replace($search, $replace, $subject);
 
-                    $pdf->writeHTML($data, true, 0, true, 0);
+                    $pdf->writeHTML($data);
 
                 }
 

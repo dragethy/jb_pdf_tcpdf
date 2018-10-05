@@ -682,25 +682,104 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             {
 
                 // make an array of  [0]strings [1]method [2]params
-                preg_match_all('/tcpdf[\s]?method="[\s]?([^\"]*?)[\s]?"[\s]?params="[\s]?([^\"]*?)[\s]?"/', $data, $matches);
+                // [^\"] tells it to get everything except ", so it will stop when it finds one
+                preg_match_all('/tcpdf[\s]?method="[\s]?([^\"]*?)[\s]?"[\s]?params="[\s]?([^\"]*?)[\s]?" types="[\s]?([^\"]*?)[\s]?"/', $data, $matches);
+
 
                 // pass each params as string of arrays, return params as array of arrays
                 foreach ($matches[2] as $key => $value)
                 {
 
-                    // return an array of params
+                    // return an array of params rather than a string of params
                     $matches[2][$key] = self::_tcpdfGetParams($value);
 
-                    // serialize the array of params
-                    if ($serialized === 1)
-                    {
-
-                        $matches[2][$key] = $pdf->serializeTCPDFtagParameters($matches[2]);
-
-                    }
                 }
 
 
+                // get the types as an array as will apply to params
+                foreach ($matches[3] as $key => $value)
+                {
+                    // return an array of types rather than a string of types
+                    $matches[3][$key] = explode(',', $value);
+                }
+
+                // apply the types for each array pf params
+                foreach ($matches[2] as $key => $value)
+                {
+
+                    // for each item in array of params parameters
+                    foreach ($value as $key2 => $value2)
+                    {
+
+
+                        // set the params as appropriate types i.e
+                        // "boolean" or "bool"
+                        // "integer" or "int"
+                        // "float" or "double"
+                        // "string" or "str"
+                        // "array" or "arr"
+                        // "object" or "obj"
+                        // "null"
+                        // "const" or "constant"
+                        switch ($matches[3][$key][$key2])
+                        {
+                            case ("boolean" || "bool"):
+
+                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "boolean");
+                                break;
+
+                            case ("integer" || "int"):
+
+                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "integer");
+                                break;
+
+                            case ("float" || "float"):
+
+                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "float");
+                                break;
+
+                            case ("string" || "string"):
+
+                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "string");
+                                break;
+
+                            case ("array" || "array"):
+
+                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "array");
+                                break;
+
+                            case ("object" || "object"):
+
+                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "object");
+                                break;
+
+                            case ("null" || "null"):
+
+                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "null");
+                                break;
+
+                            default:
+
+                                $matches[2][$key][$key2] =  settype($matches[2][$key][$key2], "string");
+                                break;
+                        }
+                }
+
+
+                // serialize the array of params
+                if ($serialized === 1)
+                {
+
+                    // serialize each param
+                    foreach ($matches[2] as $key => $value)
+                    {
+
+                        // return a serialized array of params
+                        $matches[2][$key] = $pdf->serializeTCPDFtagParameters($matches[2]);
+
+                    }
+
+                }
 
             }
 
@@ -912,7 +991,8 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         }
 
         // create the title for pdf (used in 'save as' option on computer.)
-
+$message = $pdf->getFooterMargin();
+JFactory::getApplication()->enqueueMessage($message , '$output');
         $pdf->Output($data['name_pdf'], $data['destination_pdf']);
 
     }

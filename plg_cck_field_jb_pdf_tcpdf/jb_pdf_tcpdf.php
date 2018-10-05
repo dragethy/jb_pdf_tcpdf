@@ -764,8 +764,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                     $subject = $data;
 
                     $data = str_replace($search, $replace, $subject);
-$message = $serialized;
-JFactory::getApplication()->enqueueMessage($message , '$output');
+
                     $pdf->writeHTML($data, true, 0, true, 0);
 
                 }

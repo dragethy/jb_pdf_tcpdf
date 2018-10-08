@@ -534,8 +534,9 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         $data = array();
 
         // count qty of commas in $string. If 1 or more then it is an array
-        $count = substr_count($string, ',');
-
+        // $count = substr_count($string, ',');
+        // count qty of letters in $string
+        $count = strlen($string);
 
         // if comma then break in to an array else return it
         if ($count)
@@ -549,90 +550,102 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             {
 
 
-                // start of string = ?
-                if ((strpos($string, 'array(') === 0) || (strpos($string, ',') !== false))
+                if ( (strpos($string, 'array(') === 0) || (strpos($string, ',') !== false))
                 {
-
-                    if ((strpos($string, 'array(') === 0) || strpos($string, ',') !== false)
+                    
+                    // start of string = 'array(' or contains ','...
+                    if ( strpos($string, 'array(') === 0 )
+                    // if ((strpos($string, 'array(') === 0) || (strpos($string, ',') !== false))
                     {
+    
                         // $pos = strpos( $value, ')' );
                         $delimiter = ')';
                         $trimmer[0] = 'array(';
                         $trimmer[1] = ',';
-
+                        
                     }
                     elseif(strpos($string, ',') !== false)
                     {
-
-                        // if does not start with array, split at first ",".
-                        $delimiter = ',';
-                        $trimmer[0] = '';
-                        $trimmer[1] = ',';
+    
+                            // if does not start with array, split at first ",".
+                            $delimiter = ',';
+                            $trimmer[0] = '';
+                            $trimmer[1] = ',';
+                            
                     }
 
                     $exploded = explode($delimiter, $string, 2);
                     // tidy up
-                    $exploded[0] = ltrim($exploded[0], $trimmer[0]);
-                    $exploded[1] = ltrim($exploded[1], $trimmer[1]);
+                    $part = ltrim($exploded[0], $trimmer[0]);
+                    $remainder = ltrim($exploded[1], $trimmer[1]);
+    
+                    // do not need $exploded anymore
+                    unset($exploded);
 
-                    // split $string in to array
-                    $exploded[0] = explode(',', $exploded[0]);
-
-                    // is $match[1][n] meant to be assoc array i.e. cat => 'dog'?
-                    foreach ($exploded[0] as $key => $value)
+                    // split $part has comma then it is array, else not array
+                    if (strpos($part, ',') !== false)
                     {
-                        // if assoc assign $key and $value accordingly
-                        if (strpos( $value, '=>' ))
+                        
+                        $part = explode(',', $part);
+                        
+                    }
+                    
+                    
+                    
+                    // if $part is an array, and some of the values are meant to be assoc array i.e. cat => 'dog'...
+                    if(is_array($part))
+                    {
+                        
+                        foreach ($part as $key => $value)
                         {
-
-                            $exploded2 = explode('=>', $value);
-
-                            $key = trim($exploded2[0]);
-                            $value = trim($exploded2[1]);
+                            // if assoc assign $key and $value accordingly
+                            if (strpos( $value, '=>' ))
+                            {
+    
+                                $exploded = explode('=>', $value);
+    
+                                $key = trim($exploded[0]);
+                                $value = trim($exploded[1]);
+                            }
+    
+                            $array[$key] = $value;
+    
                         }
-
-                        $array[$key] = $value;
-
+                        
+                        // reassign $part with update keys
+                        $part = $array;
+                        
+                        unset($array);
+                        
                     }
 
-                    $exploded[0] = $array;
-
-                    unset($array);
-
-                    $data[$i] = $exploded[0];
-
                     // reset string in loop as the remaining substring
-                    $string = $exploded[1];
-
+                    $string = $remainder;
+                    
                 }
                 else
                 {
-
-                    // are we all done, no commas left?
-                    $data[$i] = $string;
-
-                    // and if so, end loop
+                    
+                    // if no commas then nothing to do except assing the value to $data[$i]
+                    $part = $string;
+                    
+                    // close the forloop
                     $i = $count;
-
+                    
                 }
 
+                 
+                $data[$i] = $part;
+        
             }
-
-        }
-        else
-        {
-
-            // if no commas then nothing to do except return as only one value
-            $data[] = $string;
-
+             
+            // all done
+            return $data;
+             
         }
 
-        // all done
-        return $data;
 
     }
-
-
 
 
 
@@ -656,7 +669,8 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     */
     // protected static function _tcpdfGetMethodParamsTypes( &$pdf, $data, $serialized = 0)
     protected static function _tcpdfGetMethodParamsTypes( &$pdf, $data)
-
+    {
+      
         $matches = array();
 
         if ( $data )
@@ -665,7 +679,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             if ( $data != '' && strpos( $data, 'tcpdf' ) !== false )
             {
 
-                // make an array of  [0]strings [1]method [2]params [3]types
+                // make an array of  [0]match [1]method [2]params [3]types
                 // [^\"] tells it to get everything except ", so it will stop when it finds one
                 preg_match_all('/tcpdf[\s]?method="[\s]?([^\"]*?)[\s]?"[\s]?params="[\s]?([^\"]*?)[\s]?" types="[\s]?([^\"]*?)[\s]?"/', $data, $matches);
 
@@ -674,111 +688,20 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 foreach ($matches[2] as $key => $value)
                 {
 
-                    // get types as array of arrays
-                    $matches[3][$key] = self::_tcpdfGetArrayFromString($matches[3][$key]);
-
-                    // get params as array of arrays
+                    // get params as array of values
                     $matches[2][$key] = self::_tcpdfGetArrayFromString($matches[2][$key]);
 
                 }
 
-                // TODO: Need to
-                // a) decide if actually necessary
-                // b) if necessary, iterate therough nested arrays
-                // c) see where this code sucks
-                // // get the types as an array as will apply to params
+
+                // pass each types as string of arrays, return types as array of arrays
                 foreach ($matches[3] as $key => $value)
                 {
-                    // return an array of types rather than a string of types
-                    $matches[3][$key] = explode(',', $value);
+
+                    // get types as array of values
+                    $matches[3][$key] = self::_tcpdfGetArrayFromString($matches[3][$key]);
 
                 }
-
-                // apply the types for each array pf params
-                // foreach ($matches[2] as $key => $value)
-                // {
-
-                //     // for each item in array of params parameters
-                //     foreach ($value as $key2 => $value2)
-                //     {
-
-
-                //         // set the params as appropriate types i.e
-                //         // "boolean" or "bool"
-                //         // "integer" or "int"
-                //         // "float" or "double"
-                //         // "string" or "str"
-                //         // "array" or "arr"
-                //         // "object" or "obj"
-                //         // "constant" 0r "cons"
-                //         // "null"
-                //         switch ($matches[3][$key][$key2])
-                //         {
-                //             case ("boolean" || "bool"):
-
-                //                 settype($matches[2][$key][$key2], "boolean");
-                //                 break;
-
-                //             case ("integer" || "int"):
-
-                //                 settype($matches[2][$key][$key2], "integer");
-                //                 break;
-
-                //             case ("float" || "double"):
-
-                //                 settype($matches[2][$key][$key2], "float");
-                //                 break;
-
-                //             case ("string" || "str"):
-
-                //                 settype($matches[2][$key][$key2], "string");
-                //                 break;
-
-                //             case ("array" || "arr"):
-
-                //                 settype($matches[2][$key][$key2], "array");
-                //                 break;
-
-                //             case ("object" || "obj"):
-
-                //                 settype($matches[2][$key][$key2], "object");
-                //                 break;
-
-                //             case ("constant" || "cons"):
-
-                //                 constant($matches[2][$key][$key2]);
-                //                 break;
-
-                //             case ("null"):
-
-                //                 settype($matches[2][$key][$key2], "null");
-                //                 break;
-
-                //             default:
-
-                //                 settype($matches[2][$key][$key2], "string");
-                //                 break;
-                //         }
-
-                //     }
-
-                // }
-
-
-                // // serialize the array of params
-                // if ($serialized === 1)
-                // {
-
-                //     // serialize each param
-                //     foreach ($matches[2] as $key => $value)
-                //     {
-
-                //         // return a serialized array of params
-                //         $matches[2][$key] = $pdf->serializeTCPDFtagParameters($matches[2]);
-
-                //     }
-
-                // }
 
             }
 

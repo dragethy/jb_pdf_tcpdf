@@ -682,7 +682,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
                 // make an array of  [0]match [1]method [2]params [3]types
                 // [^\"] tells it to get everything except ", so it will stop when it finds one
-                preg_match_all('/::tcpdf[\s]?method="[\s]?([^\"]*?)[\s]?"[\s]?params="[\s]?([^\"]*?)[\s]?" types="[\s]?([^\"]*?)[\s]?"[\s]?::/', $data, $matches);
+                preg_match_all('/::tcpdf[\s]?method="[\s]?([^\"]*?)[\s]?"[\s]?params="[\s]?([^\"]*?)[\s]?" types="[\s]?([^\"]*?)[\s]?"[\s]?\/::/', $data, $matches);
 
 
                 // pass each params as string of arrays, return params as array of arrays
@@ -786,7 +786,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                     // search for original string in $data and replace with 'tcpdf method=".$method." params=".$params." />';
                     // reconstruct string with serialized params
                     $search = $matches[0][$key];
-                    $replace = '::tcpdf[\s]?method="'.$method.'"[\s]?params="'.$params.'"[\s]?types="'.$types.'"[\s]?::';
+                    $replace = '::tcpdf method="'.$method.'" params="'.$params.'" types="'.$types.'" \/::';
                     $subject = $data;
 
                     $data = str_replace($search, $replace, $subject);

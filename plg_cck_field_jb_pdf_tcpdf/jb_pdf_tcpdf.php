@@ -619,24 +619,24 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                         
                     }
 
-                    // reset string in loop as the remaining substring
-                    $string = $remainder;
-                    
                 }
                 else
                 {
                     
-                    // if no commas then nothing to do except assing the value to $data[$i]
-                    $part = $string;
-                    
-                    // close the forloop
+                    // close the forloop if no 'array(' or ','s
                     $i = $count;
                     
+                    $part = $string;
                 }
-
-                 
+                
+                
+                // assign $part to global array
                 $data[$i] = $part;
-        
+                // reset string in loop as the remaining substring
+                $string = $remainder;
+                
+                
+
             }
              
             // all done
@@ -662,6 +662,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     * @tip: If serialized, then you need the html ($data) to do string replace with
     *
     * @example:
+    * @return: is in style of $matches from preg_match_all
     * @return: [0] array of strings that have matched the regexp
     * @return: [1] array of params for each match
     * @return: [2] array of types for the param
@@ -681,7 +682,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
                 // make an array of  [0]match [1]method [2]params [3]types
                 // [^\"] tells it to get everything except ", so it will stop when it finds one
-                preg_match_all('/tcpdf[\s]?method="[\s]?([^\"]*?)[\s]?"[\s]?params="[\s]?([^\"]*?)[\s]?" types="[\s]?([^\"]*?)[\s]?"/', $data, $matches);
+                preg_match_all('/::tcpdf[\s]?method="[\s]?([^\"]*?)[\s]?"[\s]?params="[\s]?([^\"]*?)[\s]?" types="[\s]?([^\"]*?)[\s]?"[\s]?::/', $data, $matches);
 
 
                 // pass each params as string of arrays, return params as array of arrays
@@ -745,17 +746,36 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
                 // $pdf->method($params)
                 // get the method
-                $method = $matches[1][$key];
+                $method = $matches[1][$key]; //  i.e getPage
+                $params = $matches[2][$key]; // i.e. array(yes,no,array(1,2,3 => 4),5,false)
+                $types = $matches[3][$key]; // array(string,string,array(int,int,int),int,bool)
 
-                $params = $matches[2][$key];
-
-                // set type
-                foreach ($variable as $key => $value) {
-                    # code...
+                // settypes
+                foreach ($params as $key => $value)
+                {
+                    
+                    if(is_array($value))
+                    {
+                        
+                        foreach($value as $key2 => $value2)
+                        {
+                            
+                            $params[$key][$key2] = self::_tcpdfSetType($value2, $types[$key][$key2]);
+                            
+                        }
+                    }
+                    else
+                    {
+                        
+                        $params[$key] = self::_tcpdfSetType($value, $types[$key]);
+                        
+                    }
+                    
                 }
+
                 if ($serialized === 0)
                 {
-
+                    
                     // if not serialized then pass to instance and call the funky method with the funky parameters
                     self::_tcpdfSetPdfMethodParams($pdf,$method,$params);
 
@@ -766,7 +786,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                     // search for original string in $data and replace with 'tcpdf method=".$method." params=".$params." />';
                     // reconstruct string with serialized params
                     $search = $matches[0][$key];
-                    $replace = 'tcpdf method="'.$method.'" params="'.$params.'"';
+                    $replace = '::tcpdf[\s]?method="'.$method.'"[\s]?params="'.$params.'"[\s]?types="'.$types.'"[\s]?::';
                     $subject = $data;
 
                     $data = str_replace($search, $replace, $subject);
@@ -785,6 +805,77 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
 
 
+
+
+    /*
+    *
+    * set the data type for a given value
+    *
+    * @tip:
+    *
+    * @example:
+    *
+    * @return:
+    *
+    */
+    // protected static function _tcpdfGetMethodParamsTypes( &$pdf, $data, $serialized = 0)
+    protected static function _tcpdfSetType( &$value, $type)
+    {
+
+        if ( $value )
+        {
+            
+            // set the params as appropriate types i.e
+            // "boolean" or "bool"
+            // "integer" or "int"
+            // "float" or "double"
+            // "string" or "str"
+            // "array" or "arr"
+            // "object" or "obj"
+            // "null"
+            // "constant" or "const" or "cons"
+            switch ($type)
+            {
+                case ("boolean" || "bool"):
+                    settype($value, "boolean");
+                    break;
+                case ("integer" || "int"):
+                    settype($value, "integer");
+                    break;
+                case ("float" || "double"):
+                    settype($value, "float");
+                    break;
+                case ("string" || "str"):
+                    settype($value, "string");
+                    break;
+                case ("array" || "arr"):
+                    settype($value, "array");
+                    break;
+                case ("object" || "obj"):
+                    settype($value, "object");
+                    break;
+                case ("null"):
+                    settype($value, "null");
+                    break;
+                case ("constant" || "cons" || "const" ):
+                    constant($value);
+                    break;
+                    
+                default:
+                    settype($value, "string");
+                    break;
+            }
+        }
+    
+        return $value;
+}
+
+
+
+
+    
+    
+    
     // _tcpdfCallMethod
     protected static function _tcpdfSetPdfMethodParams( &$pdf,&$method, &$params = array() )
     {
@@ -885,6 +976,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
         // get data from tcpdf method="" params="" types="", and apply as $pdf->method((type) $params) or serialize data and str_replace it
+        // returned date from
         if ( $data['header'] )
         {
             $array = self::_tcpdfGetMethodParamsTypes($pdf, $data['header']);

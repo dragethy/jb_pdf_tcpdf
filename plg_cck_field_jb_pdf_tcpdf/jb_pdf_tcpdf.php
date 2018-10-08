@@ -148,11 +148,13 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         $destination_pdf   =   ( isset( $options2['destination_pdf'] ) && strlen( $options2['destination_pdf'] ) > 0 ) ? $options2['destination_pdf'] : 'F';
         // where the tcpdf stuff is
         $name_tcpdf   =   ( isset( $options2['name_tcpdf'] ) && strlen( $options2['name_tcpdf'] ) > 0 ) ? $options2['name_tcpdf'] : JPATH_SITE.'/'.'libraries'.'/'.'TCPDF-master'.'/'.'tcpdf.php';
-        // split strings by this value, might be redundant now
+        // settings is main section
         $settings = ( isset( $options2['settings'] ) && strlen( $options2['settings'] ) > 0 ) ? $options2['settings'] : '';
+        // header and footer are there just to keep it organised though can all be done in settings
         $header = ( isset( $options2['header'] ) && strlen( $options2['header'] ) > 0 ) ? $options2['header'] : '';
-        $body = ( isset( $options2['body'] ) && strlen( $options2['body'] ) > 0 ) ? $options2['body'] : '';
         $footer = ( isset( $options2['footer'] ) && strlen( $options2['footer'] ) > 0 ) ? $options2['footer'] : '';
+        // body is where you apply string replace stuff and $pdf->writeHTML(); Must come after settings it seems when actioning the code
+        $body = ( isset( $options2['body'] ) && strlen( $options2['body'] ) > 0 ) ? $options2['body'] : '';
 
         // value to store in $db
         $value = $body;
@@ -161,30 +163,13 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         $valid      =   0;
 
         // Prepare
-        switch ( $create_select ) {
-            case 0:
-                // if fields value and trigger value are the same then go for it else do not
-                $valid = ($fields[$create_field]->value == $create_field_trigger) ? 1 : 0;
-                break;
 
-            case 1:
-                // if add...
-                $valid  =   ($isNew === 1) ? 1 : 0;
-                break;
+        // if file exists
+        if ( file_exists($name_tcpdf) )
+        {
 
-            case 2:
-                // if edit
-                $valid  =   ($isNew === 0) ? 1 : 0;
-                break;
+            $valid  =   1;
 
-            case 3:
-                // er... always...
-                $valid  =   1;
-                break;
-
-            default:
-                $valid = 0;
-                break;
         }
 
 
@@ -242,13 +227,39 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
         $valid      =   $process['valid'];
 
+        $isNew      =   $process['isNew'];
+
+        switch ( $create_select )
+        {
+            case 0:
+                // if fields value and trigger value are the same then go for it else do not
+                $valid = ($fields[$process['create_field']->value == $create_field_trigger) ? 1 : 0;
+                break;
+
+            case 1:
+                // if add...
+                $valid  =   ($isNew === 1) ? 1 : 0;
+                break;
+
+            case 2:
+                // if edit
+                $valid  =   ($isNew === 0) ? 1 : 0;
+                break;
+
+            case 3:
+                // er... always...
+                $valid  =   1;
+                break;
+
+            default:
+                $valid = 0;
+                break;
+        }
+
         if ( !$valid )
         {
             return;
         }
-
-        $isNew      =   $process['isNew'];
-
 
         // str_replace Seblod stuff
         // $storages and $config are TODO, but first I need to provide 'enable' optiion in field settings
@@ -510,149 +521,6 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
 
 
-
-
-
-
-
-
-
-    /*
-    *
-    * $string = string of arrays, can be nested
-    *
-    * @tip: get string and convert to array
-    * @tip: there might be nested arrays
-    *
-    * @return: assoc array();
-    *
-    */
-    protected static function _tcpdfGetArrayFromString($string)
-    {
-
-        // return this array
-        $data = array();
-
-        // count qty of commas in $string. If 1 or more then it is an array
-        // $count = substr_count($string, ',');
-        // count qty of letters in $string
-        $count = strlen($string);
-
-        // if comma then break in to an array else return it
-        if ($count)
-        {
-
-            // It will either be
-            // a) "array(1,2,3 => 4),2,3,4"
-            // b) "1,2,array(1,2,3 => 4)"
-            // separate from end of array [0] is params, [1] is remainder of string]
-            for ($i=0; $i < $count; $i++)
-            {
-
-
-                if ( (strpos($string, 'array(') === 0) || (strpos($string, ',') !== false))
-                {
-                    
-                    // start of string = 'array(' or contains ','...
-                    if ( strpos($string, 'array(') === 0 )
-                    // if ((strpos($string, 'array(') === 0) || (strpos($string, ',') !== false))
-                    {
-    
-                        // $pos = strpos( $value, ')' );
-                        $delimiter = ')';
-                        $trimmer[0] = 'array(';
-                        $trimmer[1] = ',';
-                        
-                    }
-                    elseif(strpos($string, ',') !== false)
-                    {
-    
-                            // if does not start with array, split at first ",".
-                            $delimiter = ',';
-                            $trimmer[0] = '';
-                            $trimmer[1] = ',';
-                            
-                    }
-
-                    $exploded = explode($delimiter, $string, 2);
-                    // tidy up
-                    $part = ltrim($exploded[0], $trimmer[0]);
-                    $remainder = ltrim($exploded[1], $trimmer[1]);
-    
-                    // do not need $exploded anymore
-                    unset($exploded);
-
-                    // split $part has comma then it is array, else not array
-                    if (strpos($part, ',') !== false)
-                    {
-                        
-                        $part = explode(',', $part);
-                        
-                    }
-                    
-                    
-                    
-                    // if $part is an array, and some of the values are meant to be assoc array i.e. cat => 'dog'...
-                    if(is_array($part))
-                    {
-                        
-                        foreach ($part as $key => $value)
-                        {
-                            // if assoc assign $key and $value accordingly
-                            if (strpos( $value, '=>' ))
-                            {
-    
-                                $exploded = explode('=>', $value);
-    
-                                $key = trim($exploded[0]);
-                                $value = trim($exploded[1]);
-                            }
-    
-                            $array[$key] = $value;
-    
-                        }
-                        
-                        // reassign $part with update keys
-                        $part = $array;
-                        
-                        unset($array);
-                        
-                    }
-
-                }
-                else
-                {
-                    
-                    // close the forloop if no 'array(' or ','s
-                    $i = $count;
-                    
-                    $part = $string;
-                }
-                
-                
-                // assign $part to global array
-                $data[$i] = $part;
-                // reset string in loop as the remaining substring
-                $string = $remainder;
-                
-                
-
-            }
-             
-            // all done
-            return $data;
-             
-        }
-
-
-    }
-
-
-
-
-
-
-
     /*
     *
     * get method, params and types from ::tcpdf method="" prarams="" types="" /::
@@ -671,7 +539,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     // protected static function _tcpdfGetMethodParamsTypes( &$pdf, $data, $serialized = 0)
     protected static function _tcpdfGetMethodParamsTypes( &$pdf, $data)
     {
-      
+
         $matches = array();
 
         if ( $data )
@@ -720,6 +588,140 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
     /*
     *
+    * $string = string of arrays, can be nested
+    *
+    * @tip: get string and convert to array
+    * @tip: there might be nested arrays
+    *
+    * @return: assoc array();
+    *
+    */
+    protected static function _tcpdfGetArrayFromString($string)
+    {
+
+        // return this array
+        $data = array();
+
+        // count qty of commas in $string. If 1 or more then it is an array
+        // $count = substr_count($string, ',');
+        // count qty of letters in $string
+        $count = strlen($string);
+
+        // if comma then break in to an array else return it
+        if ($count)
+        {
+
+            // It will either be
+            // a) "array(1,2,3 => 4),2,3,4"
+            // b) "1,2,array(1,2,3 => 4)"
+            // separate from end of array [0] is params, [1] is remainder of string]
+            for ($i=0; $i < $count; $i++)
+            {
+
+
+                if ( (strpos($string, 'array(') === 0) || (strpos($string, ',') !== false))
+                {
+
+                    // start of string = 'array(' or contains ','...
+                    if ( strpos($string, 'array(') === 0 )
+                    // if ((strpos($string, 'array(') === 0) || (strpos($string, ',') !== false))
+                    {
+
+                        // $pos = strpos( $value, ')' );
+                        $delimiter = ')';
+                        $trimmer[0] = 'array(';
+                        $trimmer[1] = ',';
+
+                    }
+                    elseif(strpos($string, ',') !== false)
+                    {
+
+                            // if does not start with array, split at first ",".
+                            $delimiter = ',';
+                            $trimmer[0] = '';
+                            $trimmer[1] = ',';
+
+                    }
+
+                    $exploded = explode($delimiter, $string, 2);
+                    // tidy up
+                    $part = ltrim($exploded[0], $trimmer[0]);
+                    $remainder = ltrim($exploded[1], $trimmer[1]);
+
+                    // do not need $exploded anymore
+                    unset($exploded);
+
+                    // split $part has comma then it is array, else not array
+                    if (strpos($part, ',') !== false)
+                    {
+
+                        $part = explode(',', $part);
+
+                    }
+
+
+
+                    // if $part is an array, and some of the values are meant to be assoc array i.e. cat => 'dog'...
+                    if(is_array($part))
+                    {
+
+                        foreach ($part as $key => $value)
+                        {
+                            // if assoc assign $key and $value accordingly
+                            if (strpos( $value, '=>' ))
+                            {
+
+                                $exploded = explode('=>', $value);
+
+                                $key = trim($exploded[0]);
+                                $value = trim($exploded[1]);
+                            }
+
+                            $array[$key] = $value;
+
+                        }
+
+                        // reassign $part with update keys
+                        $part = $array;
+
+                        unset($array);
+
+                    }
+
+                }
+                else
+                {
+
+                    // close the forloop if no 'array(' or ','s
+                    $i = $count;
+
+                    $part = $string;
+                }
+
+
+                // assign $part to global array
+                $data[$i] = $part;
+                // reset string in loop as the remaining substring
+                $string = $remainder;
+
+
+
+            }
+
+            // all done
+            return $data;
+
+        }
+
+    }
+
+
+
+
+
+
+    /*
+    *
     * $pdf = instance
     * $matches = matches array from _tcpdfGetMethodParamsTypes
     * $serialized = boolean
@@ -745,37 +747,36 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             {
 
                 // $pdf->method($params)
-                // get the method
-                $method = $matches[1][$key]; //  i.e getPage
-                $params = $matches[2][$key]; // i.e. array(yes,no,array(1,2,3 => 4),5,false)
-                $types = $matches[3][$key]; // array(string,string,array(int,int,int),int,bool)
+                $method = $matches[1][$key]; //  method i.e getPage
+                $params = $matches[2][$key]; // param i.e. array(yes,no,array(1,2,3 => 4),5,false)
+                $types = $matches[3][$key]; // types array(string,string,array(int,int,int),int,bool)
 
                 // settypes
                 foreach ($params as $key => $value)
                 {
-                    
+
                     if(is_array($value))
                     {
-                        
+
                         foreach($value as $key2 => $value2)
                         {
-                            
+
                             $params[$key][$key2] = self::_tcpdfSetType($value2, $types[$key][$key2]);
-                            
+
                         }
                     }
                     else
                     {
-                        
+
                         $params[$key] = self::_tcpdfSetType($value, $types[$key]);
-                        
+
                     }
-                    
+
                 }
 
                 if ($serialized === 0)
                 {
-                    
+
                     // if not serialized then pass to instance and call the funky method with the funky parameters
                     self::_tcpdfSetPdfMethodParams($pdf,$method,$params);
 
@@ -824,7 +825,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
         if ( $value )
         {
-            
+
             // set the params as appropriate types i.e
             // "boolean" or "bool"
             // "integer" or "int"
@@ -860,22 +861,21 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 case ("constant" || "cons" || "const" ):
                     constant($value);
                     break;
-                    
+
                 default:
                     settype($value, "string");
                     break;
             }
         }
-    
+
         return $value;
-}
+
+    }
 
 
 
 
-    
-    
-    
+
     // _tcpdfCallMethod
     protected static function _tcpdfSetPdfMethodParams( &$pdf,&$method, &$params = array() )
     {
@@ -967,8 +967,6 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     protected static function _tcpdfHelper( &$data )
     {
 
-
-
         //  require_once('tcpdf_include.php');
         require_once($data['name_tcpdf']);
 
@@ -1010,11 +1008,12 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         }
 
         // create the title for pdf (used in 'save as' option on computer.)
-$message = $pdf->getFooterMargin();
-JFactory::getApplication()->enqueueMessage($message , '$output');
+        $message = $pdf->getFooterMargin();
+        JFactory::getApplication()->enqueueMessage($message , '$output');
         $pdf->Output($data['name_pdf'], $data['destination_pdf']);
 
     }
+
 } // END OF PLUGIN
 
 

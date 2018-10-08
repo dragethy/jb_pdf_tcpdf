@@ -519,20 +519,19 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
     /*
     *
-    * $string = $params
+    * $string = string of arrays, can be nested
     *
     * @tip: get string and convert to array
     * @tip: there might be nested arrays
     *
-    * @return: array();
+    * @return: assoc array();
     *
     */
-    protected static function _tcpdfGetParams($string)
+    protected static function _tcpdfGetArrayFromString($string)
     {
 
-        // array to store data
-        $array = array();
-
+        // return this array
+        $data = array();
 
         // count qty of commas in $string. If 1 or more then it is an array
         $count = substr_count($string, ',');
@@ -545,72 +544,77 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             // It will either be
             // a) "array(1,2,3 => 4),2,3,4"
             // b) "1,2,array(1,2,3 => 4)"
+            // separate from end of array [0] is params, [1] is remainder of string]
             for ($i=0; $i < $count; $i++)
             {
 
 
-                // If a)
-                if (substr($string, 0, 6) === 'array(')
+                // start of string = ?
+                if ((strpos($string, 'array(') === 0) || (strpos($string, ',') !== false))
                 {
 
-                    // $match[1] = content of array
-                    // $match[2] = remainder of string to iterate through
-                    preg_match("/array\((.*)\)[,]?(.*)/", $string, $match);
+                    if ((strpos($string, 'array(') === 0) || strpos($string, ',') !== false)
+                    {
+                        // $pos = strpos( $value, ')' );
+                        $delimiter = ')';
+                        $trimmer[0] = 'array(';
+                        $trimmer[1] = ',';
 
-                    // convert $match[1] in an array()
-                    $match[1] = explode(",", $match[1]);
+                    }
+                    elseif(strpos($string, ',') !== false)
+                    {
+
+                        // if does not start with array, split at first ",".
+                        $delimiter = ',';
+                        $trimmer[0] = '';
+                        $trimmer[1] = ',';
+                    }
+
+                    $exploded = explode($delimiter, $string, 2);
+                    // tidy up
+                    $exploded[0] = ltrim($exploded[0], $trimmer[0]);
+                    $exploded[1] = ltrim($exploded[1], $trimmer[1]);
+
+                    // split $string in to array
+                    $exploded[0] = explode(',', $exploded[0]);
 
                     // is $match[1][n] meant to be assoc array i.e. cat => 'dog'?
-                    // is $match[1][n] meant to be assoc array i.e. cat => 'dog'?
-                    foreach ($match[1] as $key => $value)
+                    foreach ($exploded[0] as $key => $value)
                     {
                         // if assoc assign $key and $value accordingly
                         if (strpos( $value, '=>' ))
                         {
 
-                            $exploded = explode('=>', $value);
+                            $exploded2 = explode('=>', $value);
 
-                            $key = $exploded[0];
-                            $value = $exploded[1];
+                            $key = trim($exploded2[0]);
+                            $value = trim($exploded2[1]);
                         }
 
-                            $data[$key] = $value;
+                        $array[$key] = $value;
 
                     }
 
-                    // reassign $match[1] with array
-                    $match[1] = $data;
+                    $exploded[0] = $array;
 
-                }
-                elseif(strpos($string, ',') !== false)
-                {
+                    unset($array);
 
-                    // if does not start with array, split at first ",".
-                    $exploded = explode(',', $string, 2);
+                    $data[$i] = $exploded[0];
 
-                    $match[1] = $exploded[0];
-                    $match[2] = $exploded[1];
+                    // reset string in loop as the remaining substring
+                    $string = $exploded[1];
 
                 }
                 else
                 {
 
                     // are we all done, no commas left?
-                    $match[1] = $string;
-                    $match[2] = '';
+                    $data[$i] = $string;
 
-                    // if so, end loop
+                    // and if so, end loop
                     $i = $count;
 
                 }
-
-
-
-                // assign value to array
-                $array[] = $match[1];
-
-                // reset string in loop as the remaining substring
-                $string = $match[2];
 
             }
 
@@ -619,35 +623,12 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         {
 
             // if no commas then nothing to do except return as only one value
-            $array[] = $string;
+            $data[] = $string;
 
         }
-
-        // clean array
-        foreach ($array as $key => $value)
-        {
-            if (is_array($value))
-            {
-                foreach ($value as $key2 => $value2)
-                {
-
-                    // remove unwanted start and end characters
-                    $array[$key][$key2] = trim($value2, "\"\t\n\s");
-
-                }
-            }
-            else
-            {
-
-                // remove unwanted start and end characters
-                $array[$key] = trim($value, "'\"\t\n\s");
-
-            }
-        }
-
 
         // all done
-        return $array;
+        return $data;
 
     }
 
@@ -661,17 +642,20 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
 
     /*
     *
-    * get method and params from any tag
+    * get method, params and types from ::tcpdf method="" prarams="" types="" /::
     * serialize them if going back in to the html, default is 'no' (0).
     *
     * @tip: Body uses different approach
+    * @tip: If serialized, then you need the html ($data) to do string replace with
     *
     * @example:
-    * @return: array(0=>array($string,1st match in string, 2nd match string)
+    * @return: [0] array of strings that have matched the regexp
+    * @return: [1] array of params for each match
+    * @return: [2] array of types for the param
     *
     */
-    protected static function _tcpdfGetMethodParams( &$pdf, $data, $serialized = 0)
-    {
+    // protected static function _tcpdfGetMethodParamsTypes( &$pdf, $data, $serialized = 0)
+    protected static function _tcpdfGetMethodParamsTypes( &$pdf, $data)
 
         $matches = array();
 
@@ -681,7 +665,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             if ( $data != '' && strpos( $data, 'tcpdf' ) !== false )
             {
 
-                // make an array of  [0]strings [1]method [2]params
+                // make an array of  [0]strings [1]method [2]params [3]types
                 // [^\"] tells it to get everything except ", so it will stop when it finds one
                 preg_match_all('/tcpdf[\s]?method="[\s]?([^\"]*?)[\s]?"[\s]?params="[\s]?([^\"]*?)[\s]?" types="[\s]?([^\"]*?)[\s]?"/', $data, $matches);
 
@@ -690,8 +674,11 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 foreach ($matches[2] as $key => $value)
                 {
 
-                    // return an array of params rather than a string of params
-                    $matches[2][$key] = self::_tcpdfGetParams($value);
+                    // get types as array of arrays
+                    $matches[3][$key] = self::_tcpdfGetArrayFromString($matches[3][$key]);
+
+                    // get params as array of arrays
+                    $matches[2][$key] = self::_tcpdfGetArrayFromString($matches[2][$key]);
 
                 }
 
@@ -700,14 +687,14 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 // b) if necessary, iterate therough nested arrays
                 // c) see where this code sucks
                 // // get the types as an array as will apply to params
-                // foreach ($matches[3] as $key => $value)
-                // {
-                //     // return an array of types rather than a string of types
-                //     $matches[3][$key] = explode(',', $value);
+                foreach ($matches[3] as $key => $value)
+                {
+                    // return an array of types rather than a string of types
+                    $matches[3][$key] = explode(',', $value);
 
-                // }
+                }
 
-                // // apply the types for each array pf params
+                // apply the types for each array pf params
                 // foreach ($matches[2] as $key => $value)
                 // {
 
@@ -723,6 +710,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 //         // "string" or "str"
                 //         // "array" or "arr"
                 //         // "object" or "obj"
+                //         // "constant" 0r "cons"
                 //         // "null"
                 //         switch ($matches[3][$key][$key2])
                 //         {
@@ -756,6 +744,11 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 //                 settype($matches[2][$key][$key2], "object");
                 //                 break;
 
+                //             case ("constant" || "cons"):
+
+                //                 constant($matches[2][$key][$key2]);
+                //                 break;
+
                 //             case ("null"):
 
                 //                 settype($matches[2][$key][$key2], "null");
@@ -772,20 +765,20 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                 // }
 
 
-                // serialize the array of params
-                if ($serialized === 1)
-                {
+                // // serialize the array of params
+                // if ($serialized === 1)
+                // {
 
-                    // serialize each param
-                    foreach ($matches[2] as $key => $value)
-                    {
+                //     // serialize each param
+                //     foreach ($matches[2] as $key => $value)
+                //     {
 
-                        // return a serialized array of params
-                        $matches[2][$key] = $pdf->serializeTCPDFtagParameters($matches[2]);
+                //         // return a serialized array of params
+                //         $matches[2][$key] = $pdf->serializeTCPDFtagParameters($matches[2]);
 
-                    }
+                //     }
 
-                }
+                // }
 
             }
 
@@ -804,20 +797,20 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
     /*
     *
     * $pdf = instance
-    * $matches = matches array from _tcpdfGetMethodParams
+    * $matches = matches array from _tcpdfGetMethodParamsTypes
     * $serialized = boolean
     * $data = $data['body'] etc required if serializing
     *
     * @tip: set method and params from $data array
     * @tip: if serialized === 1 then it is going to be a string replace in html
-    * @tip: array() is data from _tcpdfGetMethodParams
+    * @tip: array() is data from _tcpdfGetMethodParamsTypes
     *
     * @tip: Some methods may not require params : tcpdf method="AddPage" />
     *
     *
     */
 
-    protected static function _tcpdfSetMethodParams( &$pdf, $matches = array(), $serialized = 0, &$data = array() )
+    protected static function _tcpdfSetMethodParamsTypes( &$pdf, $matches = array(), $serialized = 0, &$data = array() )
     {
 
         if ( is_array($matches) )
@@ -827,13 +820,18 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
             foreach ($matches[0] as $key => $value)
             {
 
+                // $pdf->method($params)
+                // get the method
+                $method = $matches[1][$key];
+
+                $params = $matches[2][$key];
+
+                // set type
+                foreach ($variable as $key => $value) {
+                    # code...
+                }
                 if ($serialized === 0)
                 {
-                    // $pdf->method($params)
-                    // get the method
-                    $method = $matches[1][$key];
-
-                    $params = $matches[2][$key];
 
                     // if not serialized then pass to instance and call the funky method with the funky parameters
                     self::_tcpdfSetPdfMethodParams($pdf,$method,$params);
@@ -845,7 +843,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
                     // search for original string in $data and replace with 'tcpdf method=".$method." params=".$params." />';
                     // reconstruct string with serialized params
                     $search = $matches[0][$key];
-                    $replace = 'tcpdf method="'.$matches[1][$key].'" params="'.$matches[2][$key].'"';
+                    $replace = 'tcpdf method="'.$method.'" params="'.$params.'"';
                     $subject = $data;
 
                     $data = str_replace($search, $replace, $subject);
@@ -963,19 +961,19 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         // initiate
         $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-        // get method and params from tcpdf method="" params="" and apply as $pdf->method($params) or serialize data and str_replace it
+        // get data from tcpdf method="" params="" types="", and apply as $pdf->method((type) $params) or serialize data and str_replace it
         if ( $data['header'] )
         {
-            $array = self::_tcpdfGetMethodParams($pdf, $data['header']);
-            $data['header'] = self::_tcpdfSetMethodParams($pdf,$array);
+            $array = self::_tcpdfGetMethodParamsTypes($pdf, $data['header']);
+            $data['header'] = self::_tcpdfSetMethodParamsTypes($pdf,$array);
 
         }
 
         if ( $data['footer'] )
         {
 
-            $array = self::_tcpdfGetMethodParams($pdf, $data['footer']);
-            $data['footer'] = self::_tcpdfSetMethodParams($pdf,$array);
+            $array = self::_tcpdfGetMethodParamsTypes($pdf, $data['footer']);
+            $data['footer'] = self::_tcpdfSetMethodParamsTypes($pdf,$array);
 
         }
 
@@ -983,16 +981,16 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         if ( $data['settings'] )
         {
 
-            $array = self::_tcpdfGetMethodParams($pdf, $data['settings']);
-            $data['settings'] = self::_tcpdfSetMethodParams($pdf,$array);
+            $array = self::_tcpdfGetMethodParamsTypes($pdf, $data['settings']);
+            $data['settings'] = self::_tcpdfSetMethodParamsTypes($pdf,$array);
 
         }
 
         if ( $data['body'] )
         {
 
-            $array = self::_tcpdfGetMethodParams($pdf, $data['body'], 1);
-            $data['body'] = self::_tcpdfSetMethodParams($pdf, $array, 1, $data['body']);
+            $array = self::_tcpdfGetMethodParamsTypes($pdf, $data['body']);
+            $data['body'] = self::_tcpdfSetMethodParamsTypes($pdf, $array, 1, $data['body']);
 
         }
 

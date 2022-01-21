@@ -233,7 +233,7 @@ class plgCCK_FieldJb_Pdf_Tcpdf extends JCckPluginField
         {
             case 0:
                 // if fields value and trigger value are the same then go for it else do not
-                $valid = ($fields[$process['create_field']->value == $create_field_trigger) ? 1 : 0;
+                $valid = ($fields[$process['create_field']]->value == $create_field_trigger) ? 1 : 0;
                 break;
 
             case 1:
